@@ -1,0 +1,82 @@
+Tarea Académica
+
+(Evaluación flexible)
+
+Esta evaluación es flexible, por lo que puedes realizar de manera individual o grupal.
+¡Les damos la bienvenida!
+
+Esta tarea tiene como objetivo que expliquen el marco conceptual de la gestión de proyectos clásicos y ágiles.
+
+Esta tarea requiere de todo su análisis y concentración; además, es importante que sigan paso a paso las siguientes indicaciones para que alcancen los objetivos planteados.
+
+Indicaciones generales
+
+De manera grupal o individual, van a elegir 2 casos reales de aplicaciones prácticas en empresas de su localidad, donde se hayan aplicado las metodologías de gestión de proyectos clásica y ágiles, es decir, un ejemplo de cada modelo. La presentación del trabajo la van a realizar a través de un entregable en Word a través de la plataforma virtual de aprendizaje durante la semana 4.
+
+Indicaciones específicas
+
+Para el desarrollo del entregable considerar todos los siguientes aspectos: Estructura de la Tarea Académica.
+
+La presentación la van a realizar siguiendo el siguiente formato:
+
+Formato: Word
+Cantidad de páginas: A criterio del grupo
+Tipo de letra: Arial 11 con interlineado 1.0
+Canal: Plataforma virtual de aprendizaje
+Considerar citado en normas APA
+Además, no olvides revisar el formato a tomar en cuenta para la presentación.
+
+Cada grupo debe asegurar la participación del total y colaborativa de todos los integrantes durante la realización del presente trabajo.
+
+Esta entrega va a ser corregida por su docente a través de la rúbrica, por lo que es relevante que se tomen el tiempo de comprobar y evaluar a conciencia la tarea antes de enviarla, ya que toda presentación contribuye a su aprendizaje.
+
+Finalizados estos pasos, envíen su archivo a través de la tarea antes de que finalice la semana, recuerda que este debe ser en los formatos establecidos anteriormente. Si tienen alguna duda, pueden hacerla en el foro de consultas.
+
+Demuestra todo tu conocimiento a través de esta actividad. ¡Muchos éxitos!
+
+¡Vamos, recuerda que esta actividad forma parte de tu nota de Tarea Académica (TA)! 💪
+
+Entregables esperados:
+.
+Fecha de entrega de la actividad:
+Del Lunes, 2 de septiembre a las 12:00 p.m. al Sábado, 7 de septiembre a las 11:59 a.m.
+Información adicional
+Tipos de archivo que puedas subir:  PDF, PPT, Word, Excel, JPG, mp3, mp4, zip o rar.
+
+Tamaño máximo del total archivos: 500 MB.
+
+Si los archivo son muy pesados, te recomendamos comprimirlos: zip o rar.
+
+
+Motorola G54 5G
+---
+Usted configurar un servidor DHCP sin estado en r1 el objetivo  es proporcionar a 
+PCA la informacion de servidor  dns y del dominio, examine la configuracion de PCA 
+con mas detalle.
+
+
+
+
+ipv6 dhcp pool R-STATELESS
+dns-server 2001:db8:acad::254
+domain-name STATELESS.com
+exit
+int g0/1
+ipv6 nd other-config-flag
+ipv6 dhcp server R1-STATELESS
+exit
+---
+Configurar R to provide stateless DHCPv6 para PC-A
+ipv6 dhcp pool R1-STATELESS
+dns-server 2001:db8:acad::254
+domain-name STATELESS.com
+
+-
+Configure the G0/0/1 interfaces on R to provider the OTHER config flag to R1 LAN, and specify 
+the DHCP pool you just created as the DHCP resource for this interface.
+
+interface g0/1
+ipv6 nd other-config-flag
+ipv6 dhcp server R1-STATELESS
+-
+sh r | sec dhcp

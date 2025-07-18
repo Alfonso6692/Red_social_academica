@@ -1,0 +1,30 @@
+como crear compontes distribuidos en diferentes entornos
+y como llamarlos desde diferentes componentes; java, Python, C#.
+
+1. Un modulo de monitoreo que recolecte datos sobre el rendimiento del 
+sistema (uso de CPU, memoria, capacidad de disco, velocidad de subida y de bajada)
+2. Un modulo de autoconfiguracion que ajuste los parámetros del sistema en 
+función de los condiciones actuales.
+3. Un mecanismo de recuperación ante fallos que permita al sistema recuperarse
+automáticamente en caso de una falla de uno de los nodos.
+4. Un modulo de optimización que redistribuya la carga de trabajo en función de los recursos disponibles.
+
+Una aplicación que simula la carga de trabajo de la cpu le entrego el
+parámetro y la aplicación lo hace
+
+Debe haber un modulo de monitoreo en el modulo de monitoreo de ver cuanto de la cpu esta ocupada paralelamente en una base de datos voy a registrar en una tabla.
+
+Voy a elegir el tiempo de latencia antes de que inicie antes de que empiece a usar la aplicación la subida y la descarga del archivo los tiempos de subida y de bajada van variando.
+
+El tiempo de latencia va cambiar y los cambios se va registrar en una base de datos. El servidor va la registrar el tiempo de latencia del nodo.
+
+Cuando la aplicación  emula la aplicacion del nodo ocupa el 100 % de la cpu .
+ La aplicación que esta monitoreando debe enviar un mensaje de diga que el cpu esta ocupada al 100 % favor cierra aplicaciones para que pueda proceder a subir el archivo.
+
+La cpu esta ocupada al 100 % en ese nodo favor cierra algunas aplicaciones.
+
+
+Si en el tercer intento no cierra la aplicación del cpu cierra automática algunas aplicaciones.
+
+Cual es la sentencia de bajo nivel de Windows que me cierra un aplicación tal sentencia esta en tal API 
+

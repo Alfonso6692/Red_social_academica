@@ -1,0 +1,1 @@
+C:\Windows\system32>curl http://192.168.1.35:5001/upload -F "file=@C:\Users\pc\Downloads\sitemap.xml"

@@ -1,0 +1,11 @@
+Bibliografía
+1.	Cormen, T. H., Leiserson, C. E., Rivest, R. L., & Stein, C. (2022). Introduction to Algorithms (4th ed.). MIT Press.
+2.	Sedgewick, R., & Wayne, K. (2023). Algorithms (4th ed.). Addison-Wesley Professional.
+3.	Tamassia, R. (2021). Handbook of Graph Drawing and Visualization. CRC Press.
+4.	Newman, M. (2020). Networks: An Introduction. Oxford University Press.
+5.	Kleinberg, J., & Tardos, É. (2022). Algorithm Design. Pearson.
+6.	Bader, D. A., & Madduri, K. (2021). "Parallel Algorithms for Evaluating Centrality Indices in Real-world Networks". Journal of Parallel and Distributed Computing, 82(3), 274-288.
+7.	Jungnickel, D. (2023). Graphs, Networks and Algorithms (5th ed.). Springer.
+8.	Easley, D., & Kleinberg, J. (2022). Networks, Crowds, and Markets: Reasoning About a Highly Connected World. Cambridge University Press.
+9.	Knuth, D. E. (2023). The Art of Computer Programming, Volume 1: Fundamental Algorithms (3rd ed.). Addison-Wesley Professional.
+10.	Goodrich, M. T., & Tamassia, R. (2021). Data Structures and Algorithms in Java (6th ed.). Wiley.
