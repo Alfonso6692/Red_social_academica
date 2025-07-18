@@ -359,8 +359,7 @@ public class VentanaDashboard extends javax.swing.JFrame {
             }
             JOptionPane.showMessageDialog(this, mensajeCompleto.toString());
             
-            // --- AÑADE ESTA LÓGICA ---
-            // 1. Marca las notificaciones mostradas como leídas
+           
             servicio.marcarComoLeidas(notificaciones);
             // 2. Vuelve a cargar las notificaciones para actualizar el contador del menú
             cargarNotificaciones();
@@ -403,13 +402,13 @@ public class VentanaDashboard extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     private void personalizarComponentes() {
-          this.setTitle("Dashboard - " + this.usuarioLogueado.getNombre()+ " " + this.usuarioLogueado.getSegundo_apellido());
+          this.setTitle("Dashboard - " + this.usuarioLogueado.getNombre()+ " " + this.usuarioLogueado.getsegundoApellido());
     this.setLocationRelativeTo(null);
     
     if (this.usuarioLogueado != null) {
         String nombre = this.usuarioLogueado.getNombre();
         String apellido1 = this.usuarioLogueado.getApellido();
-        String apellido2 = this.usuarioLogueado.getSegundo_apellido();
+        String apellido2 = this.usuarioLogueado.getsegundoApellido();
 
         String nombreCompleto = nombre + " " + apellido1;
         

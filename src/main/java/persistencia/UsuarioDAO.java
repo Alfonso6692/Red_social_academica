@@ -38,7 +38,7 @@ public class UsuarioDAO {
                     usuario.setId(rs.getString("id"));
                     usuario.setNombre(rs.getString("nombre"));
                     usuario.setApellido(rs.getString("apellido"));
-                    usuario.setSegundo_apellido(rs.getString("segundo_apellido"));
+                    usuario.setsegundoApellido(rs.getString("segundo_apellido"));
                     usuario.setCarrera(rs.getString("carrera"));
                     usuarios.add(usuario);
                 }
@@ -56,7 +56,7 @@ public class UsuarioDAO {
             pstmt.setString(1, usuario.getId());
             pstmt.setString(2, usuario.getNombre());
             pstmt.setString(3, usuario.getApellido());
-             pstmt.setString(4, usuario.getSegundo_apellido());
+             pstmt.setString(4, usuario.getsegundoApellido());
             pstmt.setString(5, usuario.getCorreo());
             pstmt.setString(6, usuario.getContrasena());
             pstmt.setString(7, usuario.getCarrera());
@@ -88,7 +88,7 @@ public class UsuarioDAO {
                     usuario.setId(rs.getString("id"));
                     usuario.setNombre(rs.getString("nombre"));
                     usuario.setApellido(rs.getString("apellido"));
-                    usuario.setSegundo_apellido("segundo_apellido");
+                    usuario.setsegundoApellido("segundo_apellido");
                     usuario.setCorreo(rs.getString("correo"));
                     usuario.setContrasena(rs.getString("contrasena"));
                     usuario.setCarrera(rs.getString("carrera"));
@@ -147,7 +147,7 @@ public class UsuarioDAO {
 
             pstmt.setString(1, usuario.getNombre());
             pstmt.setString(2, usuario.getApellido());
-            pstmt.setString(4, usuario.getSegundo_apellido());
+            pstmt.setString(4, usuario.getsegundoApellido());
             pstmt.setString(5, usuario.getCarrera());
             pstmt.setInt(6, usuario.getCiclo());
             pstmt.setString(7, usuario.getId());

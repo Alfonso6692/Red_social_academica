@@ -15,7 +15,7 @@ public class Usuario {
     private String id;
     private String nombre;
     private String apellido;
-    private String segundo_apellido;
+    private String segundoApellido;
     private String correo;
     private String contrasena;
     private String carrera;
@@ -36,13 +36,13 @@ public class Usuario {
      * @param id
      * @param ciclo
      * @param nombre
-     * @param segundo_apellido
      * @param carrera
      * @param apellido
      * @param contrasena
+     * @param segundoApellido
      * @param correo
      */
-    public Usuario(String id, String nombre, String apellido, String correo, String contrasena, String carrera, int ciclo, String segundo_apellido) {
+    public Usuario(String id, String nombre, String apellido, String correo, String contrasena, String carrera, int ciclo, String segundoApellido) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
@@ -50,7 +50,7 @@ public class Usuario {
         this.contrasena = contrasena;
         this.carrera = carrera;
         this.ciclo = ciclo;
-        this.segundo_apellido = segundo_apellido;
+        this.segundoApellido = segundoApellido;
         this.intereses = new ArrayList<>();
     }
 
@@ -80,12 +80,12 @@ public class Usuario {
         this.apellido = apellido;
     }
 
-    public String getSegundo_apellido() {
-        return segundo_apellido;
+    public String getsegundoApellido() {
+        return segundoApellido;
     }
 
-    public void setSegundo_apellido(String segundoApellido) {
-        this.segundo_apellido = segundoApellido;
+    public void setsegundoApellido(String segundoApellido) {
+        this.segundoApellido = segundoApellido;
     }
     
    
@@ -151,6 +151,7 @@ public class Usuario {
                 "id='" + id + '\'' +
                 ", nombre='" + nombre + '\'' +
                 ", apellido='" + apellido + '\'' +
+                ", segundo apellido='" + segundoApellido + '\'' +
                 ", correo='" + correo + '\'' +
                 '}';
     }
