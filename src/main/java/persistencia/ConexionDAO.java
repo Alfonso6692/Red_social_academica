@@ -30,7 +30,7 @@ public java.util.List<Usuario> obtenerConexionesAceptadas(String idUsuario) thro
                 amigo.setNombre(rs.getString("nombre"));
                 amigo.setApellido(rs.getString("apellido"));
                 
-                // --- AÑADE ESTA LÍNEA ---
+               
                 amigo.setsegundoApellido(rs.getString("segundo_apellido"));
                 
                 amigos.add(amigo);

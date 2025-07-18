@@ -27,8 +27,7 @@ public void enviarSolicitud(Usuario solicitante, Usuario destinatario) throws SQ
         // ... (tu código actual para crear la solicitud)
         conexionDAO.crearSolicitud(solicitante.getId(), destinatario.getId());
 
-        // --- AÑADE ESTA LÓGICA ---
-        // Crear una notificación para el usuario destinatario
+       
         try {
             ServicioNotificaciones servicioNotif = new ServicioNotificaciones();
             String mensaje = solicitante.getNombre() + " " + solicitante.getApellido() + " te ha enviado una solicitud de conexión.";

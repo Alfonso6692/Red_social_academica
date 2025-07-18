@@ -15,30 +15,31 @@ public class VentanaPerfil extends javax.swing.JFrame {
     private final ServiciosUsuarios servicioUsuarios;
 
     public VentanaPerfil(Usuario usuario) {
-        
-         this.usuarioLogueado = usuario;
+
+        this.usuarioLogueado = usuario;
         this.servicioUsuarios = new ServiciosUsuarios();
         initComponents();
-        
-        
-          // Carga los datos del usuario en los campos de texto
+
+        // Carga los datos del usuario en los campos de texto
         cargarDatosUsuario();
-        
+
         this.setTitle("Mi Perfil");
         this.setLocationRelativeTo(null);
     }
-    
+
     /**
      * Rellena los campos del formulario con los datos del usuario actual.
      */
     private void cargarDatosUsuario() {
         campoNombrePerfil.setText(usuarioLogueado.getNombre());
         campoApellidoPerfil.setText(usuarioLogueado.getApellido());
+        campoSegundoApellidoPerfil.setText(usuarioLogueado.getsegundoApellido());
+        
+      
+
         campoCarreraPerfil.setText(usuarioLogueado.getCarrera());
         campoCicloPerfil.setText(String.valueOf(usuarioLogueado.getCiclo()));
     }
-    
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -59,7 +60,7 @@ public class VentanaPerfil extends javax.swing.JFrame {
         campoCicloPerfil = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        campoSegundoApellidoPerfil = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -88,7 +89,7 @@ public class VentanaPerfil extends javax.swing.JFrame {
 
         jLabel5.setText("Segundo apellido");
 
-        jTextField1.setEditable(false);
+        campoSegundoApellidoPerfil.setEditable(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -122,7 +123,7 @@ public class VentanaPerfil extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(campoCarreraPerfil, javax.swing.GroupLayout.DEFAULT_SIZE, 146, Short.MAX_VALUE)
-                                    .addComponent(jTextField1))
+                                    .addComponent(campoSegundoApellidoPerfil))
                                 .addGap(0, 0, Short.MAX_VALUE)))))
                 .addGap(54, 54, 54))
         );
@@ -140,7 +141,7 @@ public class VentanaPerfil extends javax.swing.JFrame {
                 .addGap(14, 14, 14)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(campoSegundoApellidoPerfil, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
@@ -158,7 +159,7 @@ public class VentanaPerfil extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-          this.dispose(); // Cierra únicamente esta ventana
+        this.dispose(); // Cierra únicamente esta ventana
     }//GEN-LAST:event_jButton1ActionPerformed
 
 
@@ -167,12 +168,12 @@ public class VentanaPerfil extends javax.swing.JFrame {
     private javax.swing.JTextField campoCarreraPerfil;
     private javax.swing.JTextField campoCicloPerfil;
     private javax.swing.JTextField campoNombrePerfil;
+    private javax.swing.JTextField campoSegundoApellidoPerfil;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 }

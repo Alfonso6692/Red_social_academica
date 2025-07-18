@@ -72,7 +72,6 @@ public class VentanaLogin extends javax.swing.JFrame {
         jLabel3.setText("LOGIN");
 
         comboCorreos.setEditable(true);
-        comboCorreos.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
