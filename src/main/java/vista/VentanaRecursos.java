@@ -20,6 +20,7 @@ public class VentanaRecursos extends javax.swing.JFrame {
 
     private final Usuario usuarioLogueado;
     private DefaultTableModel tableModel;
+    private java.util.List<Recurso> listaDeRecursos; // Para guardar los objetos completos
 
     public VentanaRecursos(Usuario usuario) {
         this.usuarioLogueado = usuario;
@@ -33,17 +34,18 @@ public class VentanaRecursos extends javax.swing.JFrame {
     }
 
     private void inicializarTabla() {
-        
+
         tableModel = new DefaultTableModel() {
-        @Override
-                public boolean isCellEditable(int row, int column) {
-        return false;
-    }
-    };
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; //hace que la tabla no sea editable
+            }
+        };
         tableModel.addColumn("Título");
         tableModel.addColumn("Tipo");
         tableModel.addColumn("Subido por");
         tableModel.addColumn("Fecha");
+        tableModel.addColumn("Estado");
         tablaRecursos.setModel(tableModel);
     }
 
@@ -53,13 +55,15 @@ public class VentanaRecursos extends javax.swing.JFrame {
 
         ServicioRecursos servicio = new ServicioRecursos();
         try {
-            java.util.List<Recurso> recursos = servicio.obtenerTodosLosRecursos();
-            for (Recurso r : recursos) {
-                Object[] fila = new Object[4];
+            java.util.List<Recurso> recursos = servicio.obtenerRecursosVisibles(this.usuarioLogueado);
+            this.listaDeRecursos = servicio.obtenerRecursosVisibles(this.usuarioLogueado);
+            for (Recurso r : this.listaDeRecursos) {
+                Object[] fila = new Object[5];
                 fila[0] = r.getTitulo();
                 fila[1] = r.getTipoArchivo();
                 fila[2] = r.getUsuario().getNombre() + " " + r.getUsuario().getApellido();
                 fila[3] = r.getFechaPublicacion().toString();
+                fila[4]=r.getFechaPublicacion().toString();
                 tableModel.addRow(fila);
             }
         } catch (Exception e) {
@@ -80,19 +84,21 @@ public class VentanaRecursos extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         tablaRecursos = new javax.swing.JTable();
         botonSubir = new javax.swing.JButton();
-        JButton = new javax.swing.JButton();
+        btnCerrar = new javax.swing.JButton();
+        botonHacerPrivado = new javax.swing.JButton();
+        botonHacerPublico = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         tablaRecursos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Title 1", "Title 2", "Title 3", "Title 4", "Title 5"
             }
         ));
         jScrollPane2.setViewportView(tablaRecursos);
@@ -106,10 +112,24 @@ public class VentanaRecursos extends javax.swing.JFrame {
             }
         });
 
-        JButton.setText("Cerrar");
-        JButton.addActionListener(new java.awt.event.ActionListener() {
+        btnCerrar.setText("Cerrar");
+        btnCerrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                JButtonActionPerformed(evt);
+                btnCerrarActionPerformed(evt);
+            }
+        });
+
+        botonHacerPrivado.setText("Hacer Privado");
+        botonHacerPrivado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonHacerPrivadoActionPerformed(evt);
+            }
+        });
+
+        botonHacerPublico.setText("Hacer Público");
+        botonHacerPublico.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonHacerPublicoActionPerformed(evt);
             }
         });
 
@@ -123,10 +143,14 @@ public class VentanaRecursos extends javax.swing.JFrame {
                         .addGap(17, 17, 17)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 575, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(131, 131, 131)
+                        .addGap(43, 43, 43)
                         .addComponent(botonSubir)
-                        .addGap(81, 81, 81)
-                        .addComponent(JButton)))
+                        .addGap(47, 47, 47)
+                        .addComponent(btnCerrar)
+                        .addGap(28, 28, 28)
+                        .addComponent(botonHacerPrivado)
+                        .addGap(33, 33, 33)
+                        .addComponent(botonHacerPublico)))
                 .addContainerGap(50, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -134,45 +158,49 @@ public class VentanaRecursos extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(38, 38, 38)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 353, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(botonSubir)
-                    .addComponent(JButton))
-                .addGap(37, 37, 37))
+                    .addComponent(btnCerrar)
+                    .addComponent(botonHacerPrivado)
+                    .addComponent(botonHacerPublico))
+                .addGap(31, 31, 31))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    
     private void botonSubirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonSubirActionPerformed
-          JFileChooser fileChooser = new JFileChooser();
+        JFileChooser fileChooser = new JFileChooser();
         int resultado = fileChooser.showOpenDialog(this);
 
         if (resultado == JFileChooser.APPROVE_OPTION) {
             File archivoSeleccionado = fileChooser.getSelectedFile();
-            
             String titulo = JOptionPane.showInputDialog(this, "Introduce un título para el recurso:");
+
             if (titulo == null || titulo.trim().isEmpty()) {
-                return; // El usuario canceló o no escribió nada
+                return; // El usuario canceló
             }
 
+            // CORRECCIÓN: Preguntar al usuario si el recurso es privado
+            int opcionPrivado = JOptionPane.showConfirmDialog(this, "¿Desea que este recurso sea privado?", "Visibilidad del Recurso", JOptionPane.YES_NO_OPTION);
+            boolean esPrivado = (opcionPrivado == JOptionPane.YES_OPTION);
+
             try {
-                // Crear una carpeta para guardar los recursos si no existe
                 Path directorioDestino = Paths.get("recursos_compartidos");
                 if (!Files.exists(directorioDestino)) {
                     Files.createDirectories(directorioDestino);
                 }
-
-                // Copiar el archivo al directorio del proyecto
                 Path destino = directorioDestino.resolve(archivoSeleccionado.getName());
                 Files.copy(archivoSeleccionado.toPath(), destino, StandardCopyOption.REPLACE_EXISTING);
 
-                // Guardar la información en la base de datos
                 ServicioRecursos servicio = new ServicioRecursos();
                 String tipo = archivoSeleccionado.getName().substring(archivoSeleccionado.getName().lastIndexOf(".") + 1);
-                
-                servicio.subirRecurso(titulo, "", archivoSeleccionado.getName(), tipo, this.usuarioLogueado);
-                
+
+                // CORRECCIÓN: Asegúrate de que los parámetros estén en este orden
+                servicio.subirRecurso(titulo, "", archivoSeleccionado.getName(), tipo, this.usuarioLogueado, esPrivado);
+
                 JOptionPane.showMessageDialog(this, "Recurso subido con éxito.");
                 cargarRecursos(); // Actualizar la tabla
 
@@ -182,14 +210,52 @@ public class VentanaRecursos extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_botonSubirActionPerformed
 
-    private void JButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonActionPerformed
+    private void btnCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarActionPerformed
         this.dispose(); // Cierra únicamente esta ventana
-    }//GEN-LAST:event_JButtonActionPerformed
+    }//GEN-LAST:event_btnCerrarActionPerformed
 
+    private void botonHacerPrivadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonHacerPrivadoActionPerformed
 
+        cambiarVisibilidadRecurso(true); // Llama a un método común con 'true' para privado
+    }//GEN-LAST:event_botonHacerPrivadoActionPerformed
+
+    private void botonHacerPublicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonHacerPublicoActionPerformed
+        cambiarVisibilidadRecurso(true); // Llama a un método común con 'true' para privado
+    }//GEN-LAST:event_botonHacerPublicoActionPerformed
+
+private void cambiarVisibilidadRecurso(boolean esPrivado) {
+        int filaSeleccionada = tablaRecursos.getSelectedRow();
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(this, "Por favor, selecciona un recurso de la tabla.");
+            return;
+        }
+
+        Recurso recursoSeleccionado = this.listaDeRecursos.get(filaSeleccionada);
+
+        // Verificación de seguridad: solo el dueño del recurso puede cambiar su estado
+        if (!recursoSeleccionado.getUsuario().getId().equals(this.usuarioLogueado.getId())) {
+            JOptionPane.showMessageDialog(this, "No puedes cambiar la visibilidad de un recurso que no te pertenece.", "Acción no permitida", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        try {
+            ServicioRecursos servicio = new ServicioRecursos();
+            servicio.cambiarVisibilidad(recursoSeleccionado.getId(), esPrivado);
+            
+            String estado = esPrivado ? "privado" : "público";
+            JOptionPane.showMessageDialog(this, "El recurso ahora es " + estado + ".");
+            
+            cargarRecursos(); // Recargar la tabla para reflejar el cambio
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al cambiar la visibilidad: " + e.getMessage());
+        }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton JButton;
+    private javax.swing.JButton botonHacerPrivado;
+    private javax.swing.JButton botonHacerPublico;
     private javax.swing.JButton botonSubir;
+    private javax.swing.JButton btnCerrar;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable tablaRecursos;

@@ -12,6 +12,15 @@ public class Recurso {
     private String tipoArchivo;
     private LocalDate fechaPublicacion;
     private Usuario usuario; // El usuario que subió el recurso
+    private boolean  esPrivado;
+    
+    public boolean isEsPrivado() {
+        return esPrivado;
+    }
+    
+    public void setEsPrivado(boolean  esPrivado) {
+        this.esPrivado = esPrivado;
+    }
 
     // Constructor vacío
     public Recurso() {

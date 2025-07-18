@@ -37,7 +37,7 @@ public class VentanaBuscarUsuarios extends javax.swing.JFrame {
             this.listaDeUsuariosCompleta = serviciosUsuarios.obtenerTodosLosUsuarios(this.usuarioLogueado);
             listModel.clear();
             for (Usuario u : this.listaDeUsuariosCompleta) {
-                listModel.addElement(u.getNombre() + " " + u.getApellido() + " - " + u.getCarrera());
+                listModel.addElement(u.getNombre() + " " + u.getApellido() + " " + u.getsegundoApellido() + " - " + u.getCarrera());
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error al cargar usuarios: " + e.getMessage());
