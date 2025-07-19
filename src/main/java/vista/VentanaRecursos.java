@@ -50,20 +50,21 @@ public class VentanaRecursos extends javax.swing.JFrame {
     }
 
     private void cargarRecursos() {
-        // Limpiar filas anteriores
         tableModel.setRowCount(0);
-
         ServicioRecursos servicio = new ServicioRecursos();
         try {
-            java.util.List<Recurso> recursos = servicio.obtenerRecursosVisibles(this.usuarioLogueado);
-            this.listaDeRecursos = servicio.obtenerRecursosVisibles(this.usuarioLogueado);
-            for (Recurso r : this.listaDeRecursos) {
+            // --- CAMBIA ESTA LÍNEA ---
+            // Llama al nuevo método que solo trae los recursos públicos
+            java.util.List<Recurso> recursos = servicio.obtenerRecursosPublicos();
+
+            // El resto del método para llenar la tabla sigue igual
+            for (Recurso r : recursos) {
                 Object[] fila = new Object[5];
                 fila[0] = r.getTitulo();
                 fila[1] = r.getTipoArchivo();
                 fila[2] = r.getUsuario().getNombre() + " " + r.getUsuario().getApellido();
                 fila[3] = r.getFechaPublicacion().toString();
-                fila[4]=r.getFechaPublicacion().toString();
+                fila[4] = r.isEsPrivado() ? "Privado" : "Público";
                 tableModel.addRow(fila);
             }
         } catch (Exception e) {
@@ -87,6 +88,7 @@ public class VentanaRecursos extends javax.swing.JFrame {
         btnCerrar = new javax.swing.JButton();
         botonHacerPrivado = new javax.swing.JButton();
         botonHacerPublico = new javax.swing.JButton();
+        botonVerPrivados = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -133,6 +135,13 @@ public class VentanaRecursos extends javax.swing.JFrame {
             }
         });
 
+        botonVerPrivados.setText("Ver mis recursos privados");
+        botonVerPrivados.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonVerPrivadosActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -141,36 +150,43 @@ public class VentanaRecursos extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(17, 17, 17)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 575, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 575, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(botonVerPrivados))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(43, 43, 43)
+                        .addGap(27, 27, 27)
                         .addComponent(botonSubir)
-                        .addGap(47, 47, 47)
-                        .addComponent(btnCerrar)
                         .addGap(28, 28, 28)
+                        .addComponent(btnCerrar)
+                        .addGap(18, 18, 18)
                         .addComponent(botonHacerPrivado)
-                        .addGap(33, 33, 33)
+                        .addGap(18, 18, 18)
                         .addComponent(botonHacerPublico)))
-                .addContainerGap(50, Short.MAX_VALUE))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(38, 38, 38)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 353, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(38, 38, 38)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 353, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(107, 107, 107)
+                        .addComponent(botonVerPrivados)))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(botonSubir)
                     .addComponent(btnCerrar)
                     .addComponent(botonHacerPrivado)
                     .addComponent(botonHacerPublico))
-                .addGap(31, 31, 31))
+                .addContainerGap(35, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    
+
     private void botonSubirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonSubirActionPerformed
         JFileChooser fileChooser = new JFileChooser();
         int resultado = fileChooser.showOpenDialog(this);
@@ -220,33 +236,42 @@ public class VentanaRecursos extends javax.swing.JFrame {
     }//GEN-LAST:event_botonHacerPrivadoActionPerformed
 
     private void botonHacerPublicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonHacerPublicoActionPerformed
-        cambiarVisibilidadRecurso(true); // Llama a un método común con 'true' para privado
+        cambiarVisibilidadRecurso(false); // Llama a un método común con 'false' para privado
     }//GEN-LAST:event_botonHacerPublicoActionPerformed
 
-private void cambiarVisibilidadRecurso(boolean esPrivado) {
+    private void botonVerPrivadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonVerPrivadosActionPerformed
+        new VentanaRecursosPrivados(this.usuarioLogueado).setVisible(true);
+    }//GEN-LAST:event_botonVerPrivadosActionPerformed
+
+    private void cambiarVisibilidadRecurso(boolean esPrivado) {
         int filaSeleccionada = tablaRecursos.getSelectedRow();
+
+        // 1. Verifica si se seleccionó una fila
         if (filaSeleccionada == -1) {
             JOptionPane.showMessageDialog(this, "Por favor, selecciona un recurso de la tabla.");
             return;
         }
 
+        // 2. Obtiene el recurso seleccionado de tu lista de respaldo
+        // (Asegúrate de tener la variable 'listaDeRecursos' en tu clase)
         Recurso recursoSeleccionado = this.listaDeRecursos.get(filaSeleccionada);
 
-        // Verificación de seguridad: solo el dueño del recurso puede cambiar su estado
+        // 3. Verificación de seguridad: solo el dueño puede cambiar la visibilidad
         if (!recursoSeleccionado.getUsuario().getId().equals(this.usuarioLogueado.getId())) {
             JOptionPane.showMessageDialog(this, "No puedes cambiar la visibilidad de un recurso que no te pertenece.", "Acción no permitida", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
+        // 4. Llama al servicio para actualizar la base de datos
         try {
             ServicioRecursos servicio = new ServicioRecursos();
             servicio.cambiarVisibilidad(recursoSeleccionado.getId(), esPrivado);
-            
+
             String estado = esPrivado ? "privado" : "público";
             JOptionPane.showMessageDialog(this, "El recurso ahora es " + estado + ".");
-            
+
             cargarRecursos(); // Recargar la tabla para reflejar el cambio
-            
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error al cambiar la visibilidad: " + e.getMessage());
         }
@@ -255,6 +280,7 @@ private void cambiarVisibilidadRecurso(boolean esPrivado) {
     private javax.swing.JButton botonHacerPrivado;
     private javax.swing.JButton botonHacerPublico;
     private javax.swing.JButton botonSubir;
+    private javax.swing.JButton botonVerPrivados;
     private javax.swing.JButton btnCerrar;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;

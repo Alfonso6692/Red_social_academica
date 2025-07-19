@@ -43,22 +43,37 @@ public class ServicioRecursos {
         nuevoRecurso.setFechaPublicacion(LocalDate.now());
         nuevoRecurso.setUsuario(usuario);
         nuevoRecurso.setEsPrivado(esPrivado); // Asigna el valor de privacidad
-
         recursoDAO.guardar(nuevoRecurso);
     }
 
-    /**
-     * Obtiene todos los recursos de la base de datos.
-     *
-     * @param usuario
-     * @return Una lista de todos los recursos.
-     * @throws SQLException Si hay un error de base de datos.
-     */
-    public List<Recurso> obtenerRecursosVisibles(Usuario usuario) throws SQLException {
-        return recursoDAO.obtenerRecursosVisiblesPara(usuario.getId());
-    }
+    
+
+//    /**
+//     * Obtiene todos los recursos de la base de datos.
+//     *
+//     * @param usuario
+//     * @return Una lista de todos los recursos.
+//     * @throws SQLException Si hay un error de base de datos.
+//     */
+//    public List<Recurso> obtenerRecursosVisibles(Usuario usuario) throws SQLException {
+//        return recursoDAO.obtenerRecursosPublicos(usuario.getId());
+//    }
 
     public void cambiarVisibilidad(String idRecurso, boolean esPrivado) throws java.sql.SQLException {
         recursoDAO.actualizarVisibilidad(idRecurso, esPrivado);
     }
+
+    // Dentro de la clase ServicioRecursos.java
+    public java.util.List<modelo.Recurso> obtenerRecursosPrivados(modelo.Usuario usuario) throws java.sql.SQLException {
+        return recursoDAO.obtenerRecursosPrivadosDe(usuario.getId());
+    }
+// Dentro de la clase ServicioRecursos.java
+    public java.util.List<modelo.Recurso> obtenerRecursosPublicos() throws java.sql.SQLException {
+        return recursoDAO.obtenerRecursosPublicos();
+    }
+
+
+
+
+
 }
