@@ -42,7 +42,7 @@ public class ServiciosUsuarios {
     }
 
     public Usuario registrarUsuario(String nombre, String apellido, String correo, String contrasena, String carrera, int ciclo, String segundo_apellido) throws Exception {
-        // --- AÑADE ESTA VALIDACIÓN ---
+        
         if (!correo.contains("@") || !correo.contains(".")) {
             throw new Exception("El formato del correo electrónico no es válido.");
         }
