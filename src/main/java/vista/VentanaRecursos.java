@@ -51,25 +51,28 @@ public class VentanaRecursos extends javax.swing.JFrame {
 
     private void cargarRecursos() {
         tableModel.setRowCount(0);
-        ServicioRecursos servicio = new ServicioRecursos();
-        try {
-            // --- CAMBIA ESTA LÍNEA ---
-            // Llama al nuevo método que solo trae los recursos públicos
-            java.util.List<Recurso> recursos = servicio.obtenerRecursosPublicos();
+          // Limpiar filas anteriores
+    tableModel.setRowCount(0);
 
-            // El resto del método para llenar la tabla sigue igual
-            for (Recurso r : recursos) {
-                Object[] fila = new Object[5];
-                fila[0] = r.getTitulo();
-                fila[1] = r.getTipoArchivo();
-                fila[2] = r.getUsuario().getNombre() + " " + r.getUsuario().getApellido();
-                fila[3] = r.getFechaPublicacion().toString();
-                fila[4] = r.isEsPrivado() ? "Privado" : "Público";
-                tableModel.addRow(fila);
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error al cargar recursos: " + e.getMessage());
+    ServicioRecursos servicio = new ServicioRecursos();
+    try {
+        // --- ESTA ES LA LÍNEA CLAVE ---
+        // Asigna la lista de recursos obtenida a la variable de la clase
+        this.listaDeRecursos = servicio.obtenerRecursosPublicos(); // O el método que corresponda
+
+        // Llena la tabla usando la lista que acabas de cargar
+        for (Recurso r : this.listaDeRecursos) {
+            Object[] fila = new Object[5];
+            fila[0] = r.getTitulo();
+            fila[1] = r.getTipoArchivo();
+            fila[2] = r.getUsuario().getNombre() + " " + r.getUsuario().getApellido();
+            fila[3] = r.getFechaPublicacion().toString();
+            fila[4] = r.isEsPrivado() ? "Privado" : "Público";
+            tableModel.addRow(fila);
         }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error al cargar recursos: " + e.getMessage());
+    }
     }
 
     /**
@@ -255,44 +258,44 @@ public class VentanaRecursos extends javax.swing.JFrame {
     }//GEN-LAST:event_botonVerPrivadosActionPerformed
 
     private void botonEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonEliminarActionPerformed
-        int filaSeleccionada = tablaRecursos.getSelectedRow();
+         int filaSeleccionada = tablaRecursos.getSelectedRow();
 
-        // 1. Verificar que se haya seleccionado un recurso
-        if (filaSeleccionada == -1) {
-            JOptionPane.showMessageDialog(this, "Por favor, selecciona un recurso de la tabla para eliminar.");
-            return;
+    // 1. Verificar que se haya seleccionado un recurso
+    if (filaSeleccionada == -1) {
+        JOptionPane.showMessageDialog(this, "Por favor, selecciona un recurso de la tabla para eliminar.");
+        return;
+    }
+
+    // 2. Obtener el recurso seleccionado
+    Recurso recursoSeleccionado = this.listaDeRecursos.get(filaSeleccionada);
+
+    // 3. Verificación de seguridad: solo el dueño del recurso puede eliminarlo
+    if (!recursoSeleccionado.getUsuario().getId().equals(this.usuarioLogueado.getId())) {
+        JOptionPane.showMessageDialog(this, "No puedes eliminar un recurso que no te pertenece.", "Acción no permitida", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    // 4. Pedir confirmación al usuario
+    int confirmacion = JOptionPane.showConfirmDialog(this, 
+            "¿Estás seguro de que deseas eliminar el recurso '" + recursoSeleccionado.getTitulo() + "'?\nEsta acción no se puede deshacer.", 
+            "Confirmar Eliminación", 
+            JOptionPane.YES_NO_OPTION);
+
+    if (confirmacion == JOptionPane.YES_OPTION) {
+        try {
+            // 5. Llamar al servicio para eliminar el recurso
+            ServicioRecursos servicio = new ServicioRecursos();
+            servicio.eliminarRecurso(recursoSeleccionado);
+            
+            JOptionPane.showMessageDialog(this, "Recurso eliminado con éxito.");
+            
+            // 6. Recargar la tabla para que el cambio se refleje
+            cargarRecursos();
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al eliminar el recurso: " + e.getMessage());
         }
-
-        // 2. Obtener el recurso seleccionado
-        Recurso recursoSeleccionado = this.listaDeRecursos.get(filaSeleccionada);
-
-        // 3. Verificación de seguridad: solo el dueño del recurso puede eliminarlo
-        if (!recursoSeleccionado.getUsuario().getId().equals(this.usuarioLogueado.getId())) {
-            JOptionPane.showMessageDialog(this, "No puedes eliminar un recurso que no te pertenece.", "Acción no permitida", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        // 4. Pedir confirmación al usuario
-        int confirmacion = JOptionPane.showConfirmDialog(this,
-                "¿Estás seguro de que deseas eliminar el recurso '" + recursoSeleccionado.getTitulo() + "'?\nEsta acción no se puede deshacer.",
-                "Confirmar Eliminación",
-                JOptionPane.YES_NO_OPTION);
-
-        if (confirmacion == JOptionPane.YES_OPTION) {
-            try {
-                // 5. Llamar al servicio para eliminar el recurso
-                ServicioRecursos servicio = new ServicioRecursos();
-                servicio.eliminarRecurso(recursoSeleccionado);
-
-                JOptionPane.showMessageDialog(this, "Recurso eliminado con éxito.");
-
-                // 6. Recargar la tabla para que el cambio se refleje
-                cargarRecursos();
-
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "Error al eliminar el recurso: " + e.getMessage());
-            }
-        }
+    }
     }//GEN-LAST:event_botonEliminarActionPerformed
 
     private void cambiarVisibilidadRecurso(boolean esPrivado) {
