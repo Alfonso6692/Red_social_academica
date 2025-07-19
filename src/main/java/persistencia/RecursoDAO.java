@@ -87,41 +87,49 @@ public class RecursoDAO {
      * @return Una lista de objetos Recurso.
      * @throws java.sql.SQLException
      */
-   public java.util.List<modelo.Recurso> obtenerRecursosPrivadosDe(String idUsuario) throws java.sql.SQLException {
-    java.util.List<modelo.Recurso> recursos = new java.util.ArrayList<>();
-    String sql = "SELECT r.*, u.id as id_uploader, u.nombre, u.apellido FROM recursos r " +
-                 "JOIN usuarios u ON r.id_usuario = u.id " +
-                 "WHERE r.id_usuario = ? AND r.es_privado = TRUE " +
-                 "ORDER BY r.fecha_publicacion DESC";
+    public java.util.List<modelo.Recurso> obtenerRecursosPrivadosDe(String idUsuario) throws java.sql.SQLException {
+        java.util.List<modelo.Recurso> recursos = new java.util.ArrayList<>();
+        String sql = "SELECT r.*, u.id as id_uploader, u.nombre, u.apellido FROM recursos r "
+                + "JOIN usuarios u ON r.id_usuario = u.id "
+                + "WHERE r.id_usuario = ? AND r.es_privado = TRUE "
+                + "ORDER BY r.fecha_publicacion DESC";
 
-    try (java.sql.Connection conn = ConexionBD.getConexion();
-         java.sql.PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (java.sql.Connection conn = ConexionBD.getConexion(); java.sql.PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-        pstmt.setString(1, idUsuario);
-        
-        try (java.sql.ResultSet rs = pstmt.executeQuery()) {
-            while (rs.next()) {
-                modelo.Recurso recurso = new modelo.Recurso();
-                recurso.setId(rs.getString("id"));
-                recurso.setTitulo(rs.getString("titulo"));
-                recurso.setTipoArchivo(rs.getString("tipo_archivo"));
-                recurso.setEsPrivado(rs.getBoolean("es_privado"));
-                
-                // --- AÑADE ESTA LÍNEA QUE FALTA ---
-                recurso.setFechaPublicacion(rs.getDate("fecha_publicacion").toLocalDate());
+            pstmt.setString(1, idUsuario);
 
-                modelo.Usuario uploader = new modelo.Usuario();
-                uploader.setId(rs.getString("id_uploader"));
-                uploader.setNombre(rs.getString("nombre"));
-                uploader.setApellido(rs.getString("apellido"));
-                recurso.setUsuario(uploader);
-                
-                recursos.add(recurso);
+            try (java.sql.ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    modelo.Recurso recurso = new modelo.Recurso();
+                    recurso.setId(rs.getString("id"));
+                    recurso.setTitulo(rs.getString("titulo"));
+                    recurso.setTipoArchivo(rs.getString("tipo_archivo"));
+                    recurso.setEsPrivado(rs.getBoolean("es_privado"));
+
+                    // --- AÑADE ESTA LÍNEA QUE FALTA ---
+                    recurso.setFechaPublicacion(rs.getDate("fecha_publicacion").toLocalDate());
+
+                    modelo.Usuario uploader = new modelo.Usuario();
+                    uploader.setId(rs.getString("id_uploader"));
+                    uploader.setNombre(rs.getString("nombre"));
+                    uploader.setApellido(rs.getString("apellido"));
+                    recurso.setUsuario(uploader);
+
+                    recursos.add(recurso);
+                }
             }
         }
+        return recursos;
     }
-    return recursos;
-}
+
+    public void eliminar(String idRecurso) throws java.sql.SQLException {
+        String sql = "DELETE FROM recursos WHERE id = ?";
+        try (java.sql.Connection conn = ConexionBD.getConexion(); java.sql.PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, idRecurso);
+            pstmt.executeUpdate();
+        }
+    }
 
     public void actualizarVisibilidad(String idRecurso, boolean esPrivado) throws java.sql.SQLException {
         String sql = "UPDATE recursos SET es_privado = ? WHERE id = ?";

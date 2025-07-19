@@ -89,6 +89,7 @@ public class VentanaRecursos extends javax.swing.JFrame {
         botonHacerPrivado = new javax.swing.JButton();
         botonHacerPublico = new javax.swing.JButton();
         botonVerPrivados = new javax.swing.JButton();
+        botonEliminar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -142,6 +143,13 @@ public class VentanaRecursos extends javax.swing.JFrame {
             }
         });
 
+        botonEliminar.setText("Eliminar");
+        botonEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonEliminarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -161,7 +169,9 @@ public class VentanaRecursos extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(botonHacerPrivado)
                         .addGap(18, 18, 18)
-                        .addComponent(botonHacerPublico)))
+                        .addComponent(botonHacerPublico)
+                        .addGap(52, 52, 52)
+                        .addComponent(botonEliminar)))
                 .addContainerGap(14, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -175,11 +185,13 @@ public class VentanaRecursos extends javax.swing.JFrame {
                         .addGap(107, 107, 107)
                         .addComponent(botonVerPrivados)))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(botonSubir)
-                    .addComponent(btnCerrar)
-                    .addComponent(botonHacerPrivado)
-                    .addComponent(botonHacerPublico))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(botonSubir)
+                        .addComponent(btnCerrar)
+                        .addComponent(botonHacerPrivado)
+                        .addComponent(botonHacerPublico))
+                    .addComponent(botonEliminar))
                 .addContainerGap(35, Short.MAX_VALUE))
         );
 
@@ -214,7 +226,6 @@ public class VentanaRecursos extends javax.swing.JFrame {
                 ServicioRecursos servicio = new ServicioRecursos();
                 String tipo = archivoSeleccionado.getName().substring(archivoSeleccionado.getName().lastIndexOf(".") + 1);
 
-                // CORRECCIÓN: Asegúrate de que los parámetros estén en este orden
                 servicio.subirRecurso(titulo, "", archivoSeleccionado.getName(), tipo, this.usuarioLogueado, esPrivado);
 
                 JOptionPane.showMessageDialog(this, "Recurso subido con éxito.");
@@ -242,6 +253,47 @@ public class VentanaRecursos extends javax.swing.JFrame {
     private void botonVerPrivadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonVerPrivadosActionPerformed
         new VentanaRecursosPrivados(this.usuarioLogueado).setVisible(true);
     }//GEN-LAST:event_botonVerPrivadosActionPerformed
+
+    private void botonEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonEliminarActionPerformed
+        int filaSeleccionada = tablaRecursos.getSelectedRow();
+
+        // 1. Verificar que se haya seleccionado un recurso
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(this, "Por favor, selecciona un recurso de la tabla para eliminar.");
+            return;
+        }
+
+        // 2. Obtener el recurso seleccionado
+        Recurso recursoSeleccionado = this.listaDeRecursos.get(filaSeleccionada);
+
+        // 3. Verificación de seguridad: solo el dueño del recurso puede eliminarlo
+        if (!recursoSeleccionado.getUsuario().getId().equals(this.usuarioLogueado.getId())) {
+            JOptionPane.showMessageDialog(this, "No puedes eliminar un recurso que no te pertenece.", "Acción no permitida", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // 4. Pedir confirmación al usuario
+        int confirmacion = JOptionPane.showConfirmDialog(this,
+                "¿Estás seguro de que deseas eliminar el recurso '" + recursoSeleccionado.getTitulo() + "'?\nEsta acción no se puede deshacer.",
+                "Confirmar Eliminación",
+                JOptionPane.YES_NO_OPTION);
+
+        if (confirmacion == JOptionPane.YES_OPTION) {
+            try {
+                // 5. Llamar al servicio para eliminar el recurso
+                ServicioRecursos servicio = new ServicioRecursos();
+                servicio.eliminarRecurso(recursoSeleccionado);
+
+                JOptionPane.showMessageDialog(this, "Recurso eliminado con éxito.");
+
+                // 6. Recargar la tabla para que el cambio se refleje
+                cargarRecursos();
+
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Error al eliminar el recurso: " + e.getMessage());
+            }
+        }
+    }//GEN-LAST:event_botonEliminarActionPerformed
 
     private void cambiarVisibilidadRecurso(boolean esPrivado) {
         int filaSeleccionada = tablaRecursos.getSelectedRow();
@@ -277,6 +329,7 @@ public class VentanaRecursos extends javax.swing.JFrame {
         }
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton botonEliminar;
     private javax.swing.JButton botonHacerPrivado;
     private javax.swing.JButton botonHacerPublico;
     private javax.swing.JButton botonSubir;

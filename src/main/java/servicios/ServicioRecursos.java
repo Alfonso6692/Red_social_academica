@@ -7,6 +7,9 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * Contiene la lógica de negocio para la gestión de recursos educativos.
@@ -46,8 +49,6 @@ public class ServicioRecursos {
         recursoDAO.guardar(nuevoRecurso);
     }
 
-    
-
 //    /**
 //     * Obtiene todos los recursos de la base de datos.
 //     *
@@ -58,7 +59,6 @@ public class ServicioRecursos {
 //    public List<Recurso> obtenerRecursosVisibles(Usuario usuario) throws SQLException {
 //        return recursoDAO.obtenerRecursosPublicos(usuario.getId());
 //    }
-
     public void cambiarVisibilidad(String idRecurso, boolean esPrivado) throws java.sql.SQLException {
         recursoDAO.actualizarVisibilidad(idRecurso, esPrivado);
     }
@@ -68,12 +68,18 @@ public class ServicioRecursos {
         return recursoDAO.obtenerRecursosPrivadosDe(usuario.getId());
     }
 // Dentro de la clase ServicioRecursos.java
+
     public java.util.List<modelo.Recurso> obtenerRecursosPublicos() throws java.sql.SQLException {
         return recursoDAO.obtenerRecursosPublicos();
     }
 
+    public void eliminarRecurso(Recurso recurso) throws java.sql.SQLException, java.io.IOException {
+        // 1. Eliminar el registro de la base de datos
+        recursoDAO.eliminar(recurso.getId());
 
-
-
+        // 2. Eliminar el archivo físico del disco
+        Path rutaArchivo = Paths.get("recursos_compartidos/" + recurso.getNombreArchivo());
+        Files.deleteIfExists(rutaArchivo);
+    }
 
 }
