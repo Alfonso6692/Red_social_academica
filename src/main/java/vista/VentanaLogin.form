@@ -25,59 +25,66 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="1" attributes="0">
+                  <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabel2" min="-2" pref="98" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="1" attributes="0">
-                      <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel2" min="-2" pref="98" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                  <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="campoContrasena" min="-2" pref="140" max="-2" attributes="0"/>
-                          <Component id="comboCorreos" min="-2" pref="197" max="-2" attributes="0"/>
+                          <Component id="jScrollPane1" min="-2" pref="287" max="-2" attributes="0"/>
+                          <Component id="campoContrasena" alignment="0" min="-2" pref="140" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="44" max="-2" attributes="0"/>
+                              <Component id="botonIngresar" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="44" max="-2" attributes="0"/>
+                              <Component id="botonRegistrarse" min="-2" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
-                  <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace min="0" pref="78" max="32767" attributes="0"/>
+                  <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="1" attributes="0">
-                              <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="162" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="1" attributes="0">
-                              <Component id="botonIngresar" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="74" max="-2" attributes="0"/>
-                              <Component id="botonRegistrarse" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="82" max="-2" attributes="0"/>
-                          </Group>
+                          <Component id="jScrollPane2" min="-2" pref="289" max="-2" attributes="0"/>
+                          <Component id="campoCorreo" min="-2" pref="218" max="-2" attributes="0"/>
                       </Group>
+                      <EmptySpace pref="96" max="32767" attributes="0"/>
                   </Group>
               </Group>
+          </Group>
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="-2" pref="211" max="-2" attributes="0"/>
+              <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
               <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="comboCorreos" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="campoCorreo" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="46" max="-2" attributes="0"/>
+              <Component id="jScrollPane2" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="jScrollPane1" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="39" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="campoContrasena" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="botonRegistrarse" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="botonIngresar" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="botonRegistrarse" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="89" max="32767" attributes="0"/>
+              <EmptySpace min="-2" pref="51" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -119,16 +126,30 @@
         <Property name="text" type="java.lang.String" value="LOGIN"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JComboBox" name="comboCorreos">
-      <Properties>
-        <Property name="editable" type="boolean" value="true"/>
-        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="0"/>
-        </Property>
-      </Properties>
+    <Container class="javax.swing.JScrollPane" name="jScrollPane2">
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+    </Container>
+    <Container class="javax.swing.JScrollPane" name="jScrollPane1">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+        <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
       </AuxValues>
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+      <SubComponents>
+        <Component class="javax.swing.JList" name="listaSugerencias">
+          <Properties>
+            <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.editors2.ListModelEditor">
+              <StringArray count="0"/>
+            </Property>
+          </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+          </AuxValues>
+        </Component>
+      </SubComponents>
+    </Container>
+    <Component class="javax.swing.JTextField" name="campoCorreo">
     </Component>
   </SubComponents>
 </Form>

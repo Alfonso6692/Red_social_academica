@@ -5,32 +5,96 @@
 package vista;
 
 import java.util.List;
-import modelo.Usuario;
-
+import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import modelo.Usuario;
 import servicios.ServiciosUsuarios;
 import util.GestorHistorial;
 
 public class VentanaLogin extends javax.swing.JFrame {
 
-    /**
-     * Creates new form VentanaLogin
-     */
+    private DefaultListModel<String> listModelSugerencias;
+    private List<String> historialCompleto;
+
     public VentanaLogin() {
         initComponents();
-
         this.setTitle("Inicio de Sesión - Red Social Académica");
-        this.setLocationRelativeTo(null); // Centrar la ventana
-        cargarHistorialDeCorreos();
+        this.setLocationRelativeTo(null);
+
+        this.listModelSugerencias = new DefaultListModel<>();
+        listaSugerencias.setModel(listModelSugerencias);
+
+        // Cargar el historial completo una vez
+        this.historialCompleto = GestorHistorial.cargarHistorial();
+
+        // Configurar el listener para el campo de correo
+        campoCorreo.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                actualizarSugerencias();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                actualizarSugerencias();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                /* No se usa */ }
+        });
+        listaSugerencias.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                // Obtenemos el correo seleccionado de la lista
+                String correoSeleccionado = listaSugerencias.getSelectedValue();
+                if (correoSeleccionado != null) {
+                    // Ponemos el correo en el campo de texto
+                    campoCorreo.setText(correoSeleccionado);
+                    // Ocultamos la lista de sugerencias
+                    listModelSugerencias.clear();
+                }
+            }
+        });
+
+        listaSugerencias.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            @Override
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                // Obtenemos el índice del elemento que está bajo el cursor
+                int index = listaSugerencias.locationToIndex(evt.getPoint());
+                // Resaltamos ese elemento
+                if (index != listaSugerencias.getSelectedIndex()) {
+                    listaSugerencias.setSelectedIndex(index);
+                }
+            }
+        });
+
     }
 
-        private void cargarHistorialDeCorreos() {
-        List<String> historial = GestorHistorial.cargarHistorial();
-        for (String correo : historial) {
-            comboCorreos.addItem(correo);
+    private void actualizarSugerencias() {
+        String textoIngresado = campoCorreo.getText(); // O el nombre de tu JComboBox editable
+        listModelSugerencias.clear();
+
+        // Para no sobrecargar la BD, solo buscamos si se han escrito al menos 2 caracteres
+        if (textoIngresado.isEmpty()) {
+            return;
+        }
+
+        ServiciosUsuarios servicio = new ServiciosUsuarios();
+        try {
+            // Llama al nuevo servicio para buscar en la base de datos
+            java.util.List<String> sugerencias = servicio.buscarCorreos(textoIngresado);
+            for (String correo : sugerencias) {
+                listModelSugerencias.addElement(correo);
+            }
+        } catch (Exception e) {
+            // Manejar el error silenciosamente para no molestar al usuario
+            e.printStackTrace();
         }
     }
-        
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -46,7 +110,10 @@ public class VentanaLogin extends javax.swing.JFrame {
         botonRegistrarse = new javax.swing.JButton();
         campoContrasena = new javax.swing.JPasswordField();
         jLabel3 = new javax.swing.JLabel();
-        comboCorreos = new javax.swing.JComboBox<>();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        listaSugerencias = new javax.swing.JList<>();
+        campoCorreo = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -71,7 +138,7 @@ public class VentanaLogin extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel3.setText("LOGIN");
 
-        comboCorreos.setEditable(true);
+        jScrollPane1.setViewportView(listaSugerencias);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -79,67 +146,69 @@ public class VentanaLogin extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(campoContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(comboCorreos, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 78, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addGap(162, 162, 162))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(44, 44, 44)
                                 .addComponent(botonIngresar)
-                                .addGap(74, 74, 74)
-                                .addComponent(botonRegistrarse)
-                                .addGap(82, 82, 82))))))
+                                .addGap(44, 44, 44)
+                                .addComponent(botonRegistrarse)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(campoCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(96, Short.MAX_VALUE))))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(211, 211, 211)
+                .addComponent(jLabel3)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(15, 15, 15)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel3)
-                .addGap(35, 35, 35)
+                .addGap(32, 32, 32)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(comboCorreos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(31, 31, 31)
+                    .addComponent(campoCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(46, 46, 46)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(campoContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(31, 31, 31)
+                .addGap(29, 29, 29)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(botonRegistrarse)
-                    .addComponent(botonIngresar))
-                .addContainerGap(89, Short.MAX_VALUE))
+                    .addComponent(botonIngresar)
+                    .addComponent(botonRegistrarse))
+                .addGap(51, 51, 51))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+
     private void botonIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonIngresarActionPerformed
-               // Obtiene el correo del ComboBox
-        String correo = (String) comboCorreos.getSelectedItem();
+        String correo = campoCorreo.getText();
         String contrasena = new String(campoContrasena.getPassword());
 
         ServiciosUsuarios servicio = new ServiciosUsuarios();
         try {
             Usuario usuarioLogueado = servicio.loginUsuario(correo, contrasena);
-
-            // --- AÑADE ESTA LÍNEA ---
-            // Si el login es exitoso, guarda el correo en el historial
-            GestorHistorial.guardarCorreo(correo);
-
+            GestorHistorial.guardarCorreo(correo); // Guarda el correo si el login es exitoso
             new VentanaDashboard(usuarioLogueado).setVisible(true);
             this.dispose();
-
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error: " + e.getMessage(), "Error de Inicio de Sesión", JOptionPane.ERROR_MESSAGE);
         }
@@ -186,9 +255,12 @@ public class VentanaLogin extends javax.swing.JFrame {
     private javax.swing.JButton botonIngresar;
     private javax.swing.JButton botonRegistrarse;
     private javax.swing.JPasswordField campoContrasena;
-    private javax.swing.JComboBox<String> comboCorreos;
+    private javax.swing.JTextField campoCorreo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JList<String> listaSugerencias;
     // End of variables declaration//GEN-END:variables
 }

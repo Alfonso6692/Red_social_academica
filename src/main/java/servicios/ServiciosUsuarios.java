@@ -42,7 +42,7 @@ public class ServiciosUsuarios {
     }
 
     public Usuario registrarUsuario(String nombre, String apellido, String correo, String contrasena, String carrera, int ciclo, String segundo_apellido) throws Exception {
-        
+
         if (!correo.contains("@") || !correo.contains(".")) {
             throw new Exception("El formato del correo electrónico no es válido.");
         }
@@ -53,14 +53,9 @@ public class ServiciosUsuarios {
             throw new Exception("El correo electrónico ya está registrado.");
         }
 
-        // 1. Validar que el correo no exista
-        if (usuarioDAO.buscarPorCorreo(correo) != null) {
-            throw new Exception("El correo electrónico ya está registrado.");
-        }
-
         // 2. Crear el nuevo usuario
         String id = UUID.randomUUID().toString(); // Generar un ID único
-        Usuario nuevoUsuario = new Usuario(id, nombre, apellido,correo, contrasena, carrera, ciclo, segundo_apellido);
+        Usuario nuevoUsuario = new Usuario(id, nombre, apellido, correo, contrasena, carrera, ciclo, segundo_apellido);
 
         // 3. Guardar en la base de datos
         usuarioDAO.guardar(nuevoUsuario);
@@ -93,5 +88,15 @@ public class ServiciosUsuarios {
 
         // 3. Si todo es correcto, devolver el objeto usuario
         return usuario;
+    }// Dentro de la clase ServicioUsuarios.java
+
+    public java.util.List<String> buscarCorreos(String textoParcial) throws java.sql.SQLException {
+        return usuarioDAO.buscarCorreosQueEmpiezanCon(textoParcial);
     }
+
+    public void actualizarFotoPerfil(Usuario usuario, String rutaFoto) throws java.sql.SQLException {
+        usuario.setRutaFotoPerfil(rutaFoto); // Actualiza el objeto en memoria
+        usuarioDAO.actualizarRutaFoto(usuario.getId(), rutaFoto); // Actualiza la BD
+    }
+
 }

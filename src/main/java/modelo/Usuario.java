@@ -21,6 +21,8 @@ public class Usuario {
     private String carrera;
     private int ciclo;
     private List<String> intereses;
+    private String rutaFotoPerfil;
+    
 
     // --- CONSTRUCTORES ---
 
@@ -56,6 +58,24 @@ public class Usuario {
 
     // --- GETTERS Y SETTERS ---
 
+    public String getSegundoApellido() {
+        return segundoApellido;
+    }
+
+    public void setSegundoApellido(String segundoApellido) {
+        this.segundoApellido = segundoApellido;
+    }
+
+    public String getRutaFotoPerfil() {
+        return rutaFotoPerfil;
+    }
+
+    public void setRutaFotoPerfil(String rutaFotoPerfil) {
+        this.rutaFotoPerfil = rutaFotoPerfil;
+    }
+
+    
+    
     public String getId() {
         return id;
     }

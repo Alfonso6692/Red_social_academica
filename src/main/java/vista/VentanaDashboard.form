@@ -192,8 +192,9 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="68" max="-2" attributes="0"/>
                       <Component id="lblNombreCompleto" max="32767" attributes="0"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Component id="lblCarreraCiclo" min="-2" pref="203" max="-2" attributes="0"/>
                   </Group>
                   <Component id="jPanel1" alignment="0" max="32767" attributes="0"/>
@@ -208,7 +209,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
-                      <Component id="lblCarreraCiclo" pref="40" max="32767" attributes="0"/>
+                      <Component id="lblCarreraCiclo" pref="33" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
@@ -279,7 +280,7 @@
                       <Component id="jButton2" min="-2" max="-2" attributes="0"/>
                       <Component id="botonVerGrupos" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="174" max="32767" attributes="0"/>
+                  <EmptySpace pref="181" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>

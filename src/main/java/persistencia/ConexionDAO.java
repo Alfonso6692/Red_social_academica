@@ -8,37 +8,35 @@ import modelo.Usuario;
 
 public class ConexionDAO {
 
-  // Dentro de la clase ConexionDAO.java
+    // Dentro de la clase ConexionDAO.java
+    public java.util.List<Usuario> obtenerConexionesAceptadas(String idUsuario) throws java.sql.SQLException {
+        java.util.List<Usuario> amigos = new java.util.ArrayList<>();
+        String sql = "SELECT u.* FROM usuarios u JOIN conexiones c ON "
+                + "(u.id = c.id_destinatario AND c.id_solicitante = ?) OR "
+                + "(u.id = c.id_solicitante AND c.id_destinatario = ?) "
+                + "WHERE c.estado = 'aceptada'";
 
-public java.util.List<Usuario> obtenerConexionesAceptadas(String idUsuario) throws java.sql.SQLException {
-    java.util.List<Usuario> amigos = new java.util.ArrayList<>();
-    String sql = "SELECT u.* FROM usuarios u JOIN conexiones c ON " +
-                 "(u.id = c.id_destinatario AND c.id_solicitante = ?) OR " +
-                 "(u.id = c.id_solicitante AND c.id_destinatario = ?) " +
-                 "WHERE c.estado = 'aceptada'";
+        try (java.sql.Connection conn = ConexionBD.getConexion(); java.sql.PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-    try (java.sql.Connection conn = ConexionBD.getConexion();
-         java.sql.PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, idUsuario);
+            pstmt.setString(2, idUsuario);
 
-        pstmt.setString(1, idUsuario);
-        pstmt.setString(2, idUsuario);
-        
-        try (java.sql.ResultSet rs = pstmt.executeQuery()) {
-            while (rs.next()) {
-                Usuario amigo = new Usuario();
-                amigo.setId(rs.getString("id"));
-                amigo.setNombre(rs.getString("nombre"));
-                amigo.setApellido(rs.getString("apellido"));
-                
-               
-                amigo.setsegundoApellido(rs.getString("segundo_apellido"));
-                
-                amigos.add(amigo);
+            try (java.sql.ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    Usuario amigo = new Usuario();
+                    amigo.setId(rs.getString("id"));
+                    amigo.setNombre(rs.getString("nombre"));
+                    amigo.setApellido(rs.getString("apellido"));
+
+                    amigo.setsegundoApellido(rs.getString("segundo_apellido"));
+                    amigo.setRutaFotoPerfil(rs.getString("ruta_foto_perfil"));
+
+                    amigos.add(amigo);
+                }
             }
         }
+        return amigos;
     }
-    return amigos;
-}
 
     /**
      * Actualiza el estado de una conexión a 'aceptada'.

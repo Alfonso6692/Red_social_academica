@@ -24,80 +24,104 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="jLabel2" alignment="1" pref="89" max="32767" attributes="0"/>
-                          <Component id="jLabel1" alignment="1" max="32767" attributes="0"/>
-                      </Group>
-                      <EmptySpace pref="27" max="32767" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="campoNombrePerfil" alignment="1" min="-2" pref="146" max="-2" attributes="0"/>
-                          <Component id="campoApellidoPerfil" alignment="1" min="-2" pref="146" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="-2" pref="51" max="-2" attributes="0"/>
-                  </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Component id="jLabel4" max="32767" attributes="0"/>
                           <Component id="jLabel3" alignment="1" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
-                      <Component id="jButton1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
-                      <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="21" pref="21" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="campoCicloPerfil" max="32767" attributes="0"/>
                           <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="campoCarreraPerfil" pref="146" max="32767" attributes="0"/>
-                                  <Component id="campoSegundoApellidoPerfil" max="32767" attributes="0"/>
+                              <Component id="jLabel1" min="-2" pref="89" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="campoNombrePerfil" min="-2" pref="146" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="139" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel2" min="-2" pref="89" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="campoCicloPerfil" max="32767" attributes="0"/>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Group type="103" groupAlignment="1" attributes="0">
+                                          <Component id="campoApellidoPerfil" min="-2" pref="146" max="-2" attributes="0"/>
+                                          <Group type="103" alignment="1" groupAlignment="0" max="-2" attributes="0">
+                                              <Component id="campoCarreraPerfil" max="32767" attributes="0"/>
+                                              <Component id="campoSegundoApellidoPerfil" min="-2" pref="146" max="-2" attributes="0"/>
+                                          </Group>
+                                      </Group>
+                                      <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="jLabel6" min="-2" pref="100" max="-2" attributes="0"/>
+                                          <Component id="botonCambiar" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                  </Group>
+                              </Group>
                           </Group>
                       </Group>
                   </Group>
               </Group>
-              <EmptySpace min="-2" pref="54" max="-2" attributes="0"/>
+              <EmptySpace pref="23" max="32767" attributes="0"/>
+          </Group>
+          <Group type="102" alignment="1" attributes="0">
+              <EmptySpace max="32767" attributes="0"/>
+              <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="176" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="campoNombrePerfil" alignment="3" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="24" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="1" attributes="0">
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="campoNombrePerfil" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="campoApellidoPerfil" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="1" attributes="0">
+                      <Component id="jLabel6" min="-2" pref="92" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="campoApellidoPerfil" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="campoSegundoApellidoPerfil" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="campoCarreraPerfil" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="campoSegundoApellidoPerfil" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="campoCarreraPerfil" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <Component id="botonCambiar" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="campoCicloPerfil" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
               <Component id="jButton1" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="45" max="32767" attributes="0"/>
+              <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -160,6 +184,16 @@
       <Properties>
         <Property name="editable" type="boolean" value="false"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="botonCambiar">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Cambiar foto"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="botonCambiarActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel6">
     </Component>
   </SubComponents>
 </Form>

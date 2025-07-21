@@ -22,6 +22,29 @@ public class VentanaConexiones extends javax.swing.JFrame {
         listaConexiones.setModel(listModel);
 
         cargarConexiones();
+
+        listaConexiones.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                int indiceSeleccionado = listaConexiones.getSelectedIndex();
+                if (indiceSeleccionado != -1) {
+                    // Obtener el amigo seleccionado
+                    Usuario amigo = listaDeAmigos.get(indiceSeleccionado);
+                    String rutaFoto = amigo.getRutaFotoPerfil();
+
+                    // Cargar y mostrar la imagen
+                    if (rutaFoto != null && !rutaFoto.isEmpty()) {
+                        javax.swing.ImageIcon icon = new javax.swing.ImageIcon(rutaFoto);
+                        // Escalar la imagen para que quepa en el JLabel
+                        java.awt.Image img = icon.getImage().getScaledInstance(lblFotoPerfil.getWidth(), lblFotoPerfil.getHeight(), java.awt.Image.SCALE_SMOOTH);
+                        lblFotoPerfil.setIcon(new javax.swing.ImageIcon(img));
+                    } else {
+                        // Si no tiene foto, limpiar el recuadro o poner una imagen por defecto
+                        lblFotoPerfil.setIcon(null);
+                    }
+                }
+            }
+        });
+
     }
 
     private void cargarConexiones() {
@@ -55,10 +78,15 @@ public class VentanaConexiones extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPopupMenu1 = new javax.swing.JPopupMenu();
+        jPopupMenu2 = new javax.swing.JPopupMenu();
+        jPopupMenu3 = new javax.swing.JPopupMenu();
+        jPopupMenu4 = new javax.swing.JPopupMenu();
         jScrollPane1 = new javax.swing.JScrollPane();
         listaConexiones = new javax.swing.JList<>();
         botonEnviarMensaje = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
+        lblFotoPerfil = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -78,6 +106,9 @@ public class VentanaConexiones extends javax.swing.JFrame {
             }
         });
 
+        lblFotoPerfil.setAlignmentX(100.0F);
+        lblFotoPerfil.setAlignmentY(100.0F);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -85,32 +116,40 @@ public class VentanaConexiones extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(86, 86, 86)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 488, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(198, 198, 198)
+                        .addGap(77, 77, 77)
                         .addComponent(botonEnviarMensaje)
                         .addGap(58, 58, 58)
-                        .addComponent(jButton1)))
-                .addContainerGap(111, Short.MAX_VALUE))
+                        .addComponent(jButton1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(23, 23, 23)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 488, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(44, 44, 44)
+                        .addComponent(lblFotoPerfil, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(62, 62, 62)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(37, 37, 37)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(60, 60, 60)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(91, 91, 91)
+                        .addComponent(lblFotoPerfil, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(32, 32, 32)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(botonEnviarMensaje)
                     .addComponent(jButton1))
-                .addContainerGap(53, Short.MAX_VALUE))
+                .addContainerGap(60, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+
     private void botonEnviarMensajeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonEnviarMensajeActionPerformed
-       int indiceSeleccionado = listaConexiones.getSelectedIndex();
+        int indiceSeleccionado = listaConexiones.getSelectedIndex();
 
         // Agregué una validación para cuando la lista está vacía
         if (indiceSeleccionado != -1 && !listaDeAmigos.isEmpty()) {
@@ -133,7 +172,12 @@ public class VentanaConexiones extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botonEnviarMensaje;
     private javax.swing.JButton jButton1;
+    private javax.swing.JPopupMenu jPopupMenu1;
+    private javax.swing.JPopupMenu jPopupMenu2;
+    private javax.swing.JPopupMenu jPopupMenu3;
+    private javax.swing.JPopupMenu jPopupMenu4;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblFotoPerfil;
     private javax.swing.JList<String> listaConexiones;
     // End of variables declaration//GEN-END:variables
 }

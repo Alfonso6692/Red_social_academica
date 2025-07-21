@@ -19,14 +19,26 @@ public class VentanaDashboard extends javax.swing.JFrame {
     private final Usuario usuarioLogueado;
 
     public VentanaDashboard(Usuario usuario) {
-        this.usuarioLogueado = usuario; // Ahora esta línea funcionará
+        this.usuarioLogueado = usuario; 
+        
+        
+        
         initComponents();
-
+        
         personalizarComponentes();
-        cargarNotificaciones(); // <-- Llama al nuevo método
-        pack(); // <-- AÑADE ESTA LÍNEA
+        cargarNotificaciones(); // 
+        
+        
+        
+        
+        pack(); // 
     }
 
+    
+    
+    
+    
+    
     private void cargarNotificaciones() {
         // Asumiendo que tienes una clase ServicioNotificaciones
         servicios.ServicioNotificaciones servicio = new servicios.ServicioNotificaciones();
@@ -168,7 +180,7 @@ public class VentanaDashboard extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton2)
                     .addComponent(botonVerGrupos))
-                .addContainerGap(174, Short.MAX_VALUE))
+                .addContainerGap(181, Short.MAX_VALUE))
         );
 
         jMenu1.setText("Inicio");
@@ -277,8 +289,9 @@ public class VentanaDashboard extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(68, 68, 68)
                         .addComponent(lblNombreCompleto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblCarreraCiclo, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -289,7 +302,7 @@ public class VentanaDashboard extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(20, 20, 20)
-                        .addComponent(lblCarreraCiclo, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE))
+                        .addComponent(lblCarreraCiclo, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(lblNombreCompleto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
