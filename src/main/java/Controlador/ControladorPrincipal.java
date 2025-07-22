@@ -17,7 +17,7 @@ public class ControladorPrincipal {
      */
     public void mostrarVentanaPublicacion() {
         // 1. Prepara el Modelo (los datos)
-        Usuario autor = new Usuario("carlos_dev", "Carlos Santana");
+        Usuario autor = new Usuario("Alfonso", "Carlos Santana");
         Publicacion publicacionDeEjemplo = new Publicacion(autor, "Este es el post que se abre desde el Dashboard. ¡Funciona!");
         publicacionDeEjemplo.agregarComentario(new Comentario(new Usuario("ana_code", "Ana"), "¡Excelente! Click para ver."));
 

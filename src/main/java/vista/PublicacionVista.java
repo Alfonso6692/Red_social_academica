@@ -15,6 +15,7 @@ import modelo.Usuario;
 public class PublicacionVista extends javax.swing.JFrame {
 
     private Publicacion publicacion;
+    private Usuario usuarioLogueado;
 
     /**
      * Creates new form PublicacionVista
@@ -24,12 +25,15 @@ public class PublicacionVista extends javax.swing.JFrame {
     public PublicacionVista(Publicacion publicacion) {
         initComponents(); // Método de NetBeans
         this.publicacion = publicacion;
+        this.usuarioLogueado = usuarioLogueado;
         this.setLocationRelativeTo(null); // Centrar ventana
         actualizarVista(); // Llenar la UI con datos    
     }
 
     public void actualizarVista() {
-        lblAutor.setText("Publicación de: " + publicacion.getAutor().getNombreUsuario());
+        
+        lblNombreAutor.setText("Publicación de: " + publicacion.getAutor().getNombreUsuario());
+
         txtAreaPublicacion.setText(publicacion.getTextoPublicacion());
 
         StringBuilder textoComentarios = new StringBuilder();
@@ -50,7 +54,7 @@ public class PublicacionVista extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        lblAutor = new javax.swing.JLabel();
+        lblNombreAutor = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtAreaPublicacion = new javax.swing.JTextArea();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -59,8 +63,6 @@ public class PublicacionVista extends javax.swing.JFrame {
         btnComentar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        lblAutor.setText("Autor");
 
         txtAreaPublicacion.setEditable(false);
         txtAreaPublicacion.setColumns(20);
@@ -85,32 +87,38 @@ public class PublicacionVista extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(29, 29, 29)
-                .addComponent(lblAutor, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(txtNuevoComentario)
-                    .addComponent(jScrollPane2)
-                    .addComponent(jScrollPane1))
-                .addGap(18, 18, 18)
-                .addComponent(btnComentar)
-                .addContainerGap(34, Short.MAX_VALUE))
+                .addComponent(lblNombreAutor, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(17, 17, 17)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(txtNuevoComentario, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnComentar)
+                        .addGap(68, 68, 68))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 266, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(55, 55, 55)
-                .addComponent(lblAutor)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(49, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap(42, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(55, 55, 55)
+                        .addComponent(lblNombreAutor, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtNuevoComentario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnComentar))
-                .addGap(18, 18, 18))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnComentar)
+                    .addComponent(txtNuevoComentario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(19, 19, 19))
         );
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
@@ -121,13 +129,12 @@ public class PublicacionVista extends javax.swing.JFrame {
     private void btnComentarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComentarActionPerformed
         String texto = txtNuevoComentario.getText();
         if (texto != null && !texto.trim().isEmpty()) {
-            // En una app real, aquí iría el usuario que ha iniciado sesión
-            Usuario autorComentario = publicacion.getAutor();
-            Comentario nuevoComentario = new Comentario(autorComentario, texto);
-
-            publicacion.agregarComentario(nuevoComentario); // Actualiza el modelo
-            txtNuevoComentario.setText(""); // Limpia el campo de texto
-            actualizarVista(); // Refresca la UI
+            // 3. USA EL USUARIO LOGUEADO EN LUGAR DE UNO SIMULADO
+            Comentario nuevoComentario = new Comentario(this.usuarioLogueado, texto);
+            
+            publicacion.agregarComentario(nuevoComentario);
+            txtNuevoComentario.setText("");
+            actualizarVista();
         }
     }//GEN-LAST:event_btnComentarActionPerformed
 
@@ -137,7 +144,7 @@ public class PublicacionVista extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JLabel lblAutor;
+    private javax.swing.JLabel lblNombreAutor;
     private javax.swing.JTextArea txtAreaComentarios;
     private javax.swing.JTextArea txtAreaPublicacion;
     private javax.swing.JTextField txtNuevoComentario;
