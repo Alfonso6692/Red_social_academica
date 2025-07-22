@@ -22,10 +22,28 @@ public class Usuario {
     private int ciclo;
     private List<String> intereses;
     private String rutaFotoPerfil;
+    private String nombreUsuario;
+    private String nombreCompleto;
     
 
     // --- CONSTRUCTORES ---
 
+    public Usuario(String nombreUsuario, String nombreCompleto) {
+        this.nombreUsuario = nombreUsuario;
+        this.nombreCompleto = nombreCompleto;
+    }
+
+    public String getNombreUsuario() {
+        return nombreUsuario;
+    }
+
+    public String getNombreCompleto() {
+        return nombreCompleto;
+    }
+
+    
+    
+    
     /**
      * Constructor por defecto.
      */
