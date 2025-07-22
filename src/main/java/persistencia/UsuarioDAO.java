@@ -159,4 +159,38 @@ public class UsuarioDAO {
         return usuarios;
     }
 
+    // Dentro de la clase UsuarioDAO.java
+    /**
+     * Busca un usuario por su ID único.
+     *
+     * @param id El ID del usuario a buscar.
+     * @return Un objeto Usuario si se encuentra, de lo contrario null.
+     * @throws java.sql.SQLException Si ocurre un error de base de datos.
+     */
+    public Usuario buscarPorId(String id) throws java.sql.SQLException {
+        Usuario usuario = null;
+        String sql = "SELECT * FROM usuarios WHERE id = ?";
+
+        try (java.sql.Connection conn = ConexionBD.getConexion(); java.sql.PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, id);
+
+            try (java.sql.ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    usuario = new Usuario();
+                    usuario.setId(rs.getString("id"));
+                    usuario.setNombre(rs.getString("nombre"));
+                    usuario.setApellido(rs.getString("apellido"));
+                    usuario.setSegundoApellido(rs.getString("segundo_apellido"));
+                    usuario.setCorreo(rs.getString("correo"));
+                    usuario.setContrasena(rs.getString("contrasena"));
+                    usuario.setCarrera(rs.getString("carrera"));
+                    usuario.setCiclo(rs.getInt("ciclo"));
+                    usuario.setRutaFotoPerfil(rs.getString("ruta_foto_perfil"));
+                }
+            }
+        }
+        return usuario;
+    }
+
 }

@@ -61,8 +61,9 @@ public class ServicioRecomendaciones {
     /**
      * Llama al método del grafo para obtener las sugerencias de amigos.
      * @param usuario
+     * @return 
      */
     public List<Usuario> sugerirAmigos(Usuario usuario) {
-        return this.grafoUsuarios.sugerirConexiones(usuario);
+         return this.grafoUsuarios.sugerirConexiones(usuario);
     }
 }
