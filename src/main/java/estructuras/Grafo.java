@@ -190,6 +190,25 @@ public class Grafo<T> {
         return sugerencias;
     }
     
+    
+    public java.util.List<T> sugerirAmigos(T vertice) {
+    java.util.Set<T> sugerencias = new java.util.HashSet<>();
+    java.util.List<T> amigosDirectos = obtenerVecinos(vertice); // Asumiendo que tienes un método así
+
+    // 1. Recorre los amigos directos del usuario
+    for (T amigo : amigosDirectos) {
+        // 2. Por cada amigo, obtén sus amigos (los "amigos de amigos")
+        java.util.List<T> amigosDelAmigo = obtenerVecinos(amigo);
+        for (T sugerencia : amigosDelAmigo) {
+            // 3. Agrega la sugerencia si no es el usuario original y no es ya un amigo directo
+            if (!sugerencia.equals(vertice) && !amigosDirectos.contains(sugerencia)) {
+                sugerencias.add(sugerencia);
+            }
+        }
+    }
+    return new java.util.ArrayList<>(sugerencias);
+}
+    
     // Método auxiliar para reconstruir ruta
     private List<T> reconstruirRuta(Map<T, T> padres, T origen, T destino) {
         List<T> ruta = new ArrayList<>();

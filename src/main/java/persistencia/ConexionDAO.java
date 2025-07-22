@@ -39,6 +39,29 @@ public class ConexionDAO {
     }
 
     /**
+     * Obtiene todas las conexiones con estado 'aceptada'.
+     *
+     * @return Una lista de objetos Conexion.
+     * @throws java.sql.SQLException Si ocurre un error de base de datos.
+     */
+    public java.util.List<modelo.Conexion> obtenerTodasLasConexionesAceptadas() throws java.sql.SQLException {
+        java.util.List<modelo.Conexion> conexiones = new java.util.ArrayList<>();
+        String sql = "SELECT * FROM conexiones WHERE estado = 'aceptada'";
+
+        try (java.sql.Connection conn = ConexionBD.getConexion(); java.sql.PreparedStatement pstmt = conn.prepareStatement(sql); java.sql.ResultSet rs = pstmt.executeQuery()) {
+
+            while (rs.next()) {
+                modelo.Conexion conexion = new modelo.Conexion();
+                conexion.setIdSolicitante(rs.getString("id_solicitante"));
+                conexion.setIdDestinatario(rs.getString("id_destinatario"));
+                conexion.setEstado(rs.getString("estado"));
+                conexiones.add(conexion);
+            }
+        }
+        return conexiones;
+    }
+
+    /**
      * Actualiza el estado de una conexión a 'aceptada'.
      *
      * @param idSolicitante

@@ -130,4 +130,33 @@ public class UsuarioDAO {
         }
     }
 
+    // Dentro de la clase UsuarioDAO.java
+    /**
+     * Obtiene una lista de todos los usuarios de la base de datos.
+     *
+     * @return Una lista de objetos Usuario.
+     * @throws java.sql.SQLException Si ocurre un error de base de datos.
+     */
+    public java.util.List<Usuario> obtenerTodos() throws java.sql.SQLException {
+        java.util.List<Usuario> usuarios = new java.util.ArrayList<>();
+        String sql = "SELECT * FROM usuarios";
+
+        try (java.sql.Connection conn = ConexionBD.getConexion(); java.sql.PreparedStatement pstmt = conn.prepareStatement(sql); java.sql.ResultSet rs = pstmt.executeQuery()) {
+
+            while (rs.next()) {
+                Usuario usuario = new Usuario();
+                usuario.setId(rs.getString("id"));
+                usuario.setNombre(rs.getString("nombre"));
+                usuario.setApellido(rs.getString("apellido"));
+                usuario.setSegundoApellido(rs.getString("segundo_apellido"));
+                usuario.setCorreo(rs.getString("correo"));
+                usuario.setContrasena(rs.getString("contrasena"));
+                usuario.setCarrera(rs.getString("carrera"));
+                usuario.setCiclo(rs.getInt("ciclo"));
+                usuarios.add(usuario);
+            }
+        }
+        return usuarios;
+    }
+
 }

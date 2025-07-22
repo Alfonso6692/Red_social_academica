@@ -1,28 +1,31 @@
 package controlador;
 
-import modelo.Comentario;
 import modelo.Publicacion;
 import modelo.Usuario;
+import persistencia.PublicacionDAO; 
+import persistencia.UsuarioDAO;   
 import vista.PublicacionVista;
 
-/**
- * Esta clase se encarga de la lógica principal de la aplicación,
- * como la creación de ventanas y la preparación de datos.
- */
 public class ControladorPrincipal {
 
-    /**
-     * Prepara los datos de una publicación de ejemplo y luego
-     * crea y muestra la ventana para visualizarla.
-     */
     public void mostrarVentanaPublicacion() {
-        // 1. Prepara el Modelo (los datos)
-        Usuario autor = new Usuario("Alfonso", "Carlos Santana");
-        Publicacion publicacionDeEjemplo = new Publicacion(autor, "Este es el post que se abre desde el Dashboard. ¡Funciona!");
-        publicacionDeEjemplo.agregarComentario(new Comentario(new Usuario("ana_code", "Ana"), "¡Excelente! Click para ver."));
+        // 1. Crear instancias de los DAO
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
+        PublicacionDAO publicacionDAO = new PublicacionDAO();
 
-        // 2. Crea y muestra la Vista, pasándole los datos
-        PublicacionVista vistaPublicacion = new PublicacionVista(publicacionDeEjemplo);
+        // 2. Usar los DAO para obtener los datos (simulamos un login y una carga de post)
+        Usuario usuarioLogueado = usuarioDAO.buscarPorUsername("ana_code");
+        Publicacion publicacionAMostrar = publicacionDAO.obtenerPublicacionEjemplo();
+        
+        // Verificación para evitar errores si algo no se encuentra
+        if (usuarioLogueado == null || publicacionAMostrar == null) {
+            System.err.println("Error: No se pudieron cargar los datos de ejemplo desde el DAO.");
+            // En una app real, mostrarías un JOptionPane con un error.
+            return;
+        }
+        
+        // 3. Crear y mostrar la Vista, pasándole los datos "reales" obtenidos del DAO
+        PublicacionVista vistaPublicacion = new PublicacionVista(publicacionAMostrar, usuarioLogueado);
         vistaPublicacion.setVisible(true);
     }
 }
