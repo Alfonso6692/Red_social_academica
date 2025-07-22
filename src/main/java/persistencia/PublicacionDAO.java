@@ -27,6 +27,7 @@ public class PublicacionDAO {
 
             if (rs.next()) {
                 publicacion = new Publicacion();
+                
                 publicacion.setId(rs.getString("id"));
                 publicacion.setContenido(rs.getString("contenido"));
                 publicacion.setFechaPublicacion(rs.getTimestamp("fecha_publicacion").toLocalDateTime());

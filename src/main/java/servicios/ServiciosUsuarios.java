@@ -2,9 +2,7 @@ package servicios;
 
 import modelo.Usuario;
 import persistencia.UsuarioDAO;
-import java.sql.SQLException;
 import java.util.UUID;
-import modelo.Grupo;
 
 public class ServiciosUsuarios {
 

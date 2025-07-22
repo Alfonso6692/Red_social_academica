@@ -12,34 +12,44 @@ import modelo.Usuario;
  *
  * @author ASUS-VASQUEZ
  */
-public class PublicacionVista extends javax.swing.JFrame {
+public final class PublicacionVista extends javax.swing.JFrame {
 
-    private Publicacion publicacion;
-    private Usuario usuarioLogueado;
-
+   
+    private final Publicacion publicacionMostrada;
+    private final Usuario usuarioLogueado;
     /**
      * Creates new form PublicacionVista
      *
      * @param publicacion
+     * @param usuario
      */
-    public PublicacionVista(Publicacion publicacion) {
-        initComponents(); // Método de NetBeans
-        this.publicacion = publicacion;
-        this.usuarioLogueado = usuarioLogueado;
-        this.setLocationRelativeTo(null); // Centrar ventana
-        actualizarVista(); // Llenar la UI con datos    
+
+    public PublicacionVista(modelo.Publicacion publicacion, modelo.Usuario usuario) {
+        this.usuarioLogueado = usuario;
+        this.publicacionMostrada=publicacion;
+        initComponents();
+        actualizarVista();
+
+        // Aquí puedes añadir el código para mostrar los datos en la ventana
+        this.setTitle("Publicación de " + publicacion.getUsuario().getNombre());
+        // ej: textAreaContenido.setText(publicacion.getContenido());
     }
 
     public void actualizarVista() {
-        
-        lblNombreAutor.setText("Publicación de: " + publicacion.getAutor().getNombreUsuario());
 
-        txtAreaPublicacion.setText(publicacion.getTextoPublicacion());
+        lblNombreAutor.setText("Publicación de: " + this.publicacionMostrada.getUsuario().getNombre());
+
+        txtAreaContenido.setText(publicacionMostrada.getContenido());
 
         StringBuilder textoComentarios = new StringBuilder();
-        // Este bucle ahora funciona porque ArrayListPersonalizado es Iterable
-        for (Comentario c : publicacion.getComentarios()) {
-            textoComentarios.append(c.toString()).append("\n");
+        if (publicacionMostrada.getComentarios() != null) {
+            for (Comentario c : publicacionMostrada.getComentarios()) {
+            // Asumiendo que la clase Comentario tiene getAutor() y getTexto()
+            textoComentarios.append(c.getAutor().getNombre()) // Usa 'c' minúscula
+                            .append(": ")
+                            .append(c.getTexto()) // Usa 'c' minúscula
+                            .append("\n");
+        }
         }
         txtAreaComentarios.setText(textoComentarios.toString());
     }
@@ -56,7 +66,7 @@ public class PublicacionVista extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         lblNombreAutor = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        txtAreaPublicacion = new javax.swing.JTextArea();
+        txtAreaContenido = new javax.swing.JTextArea();
         jScrollPane2 = new javax.swing.JScrollPane();
         txtAreaComentarios = new javax.swing.JTextArea();
         txtNuevoComentario = new javax.swing.JTextField();
@@ -64,10 +74,10 @@ public class PublicacionVista extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        txtAreaPublicacion.setEditable(false);
-        txtAreaPublicacion.setColumns(20);
-        txtAreaPublicacion.setRows(5);
-        jScrollPane1.setViewportView(txtAreaPublicacion);
+        txtAreaContenido.setEditable(false);
+        txtAreaContenido.setColumns(20);
+        txtAreaContenido.setRows(5);
+        jScrollPane1.setViewportView(txtAreaContenido);
 
         txtAreaComentarios.setEditable(false);
         txtAreaComentarios.setColumns(20);
@@ -127,12 +137,13 @@ public class PublicacionVista extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnComentarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComentarActionPerformed
-        String texto = txtNuevoComentario.getText();
-        if (texto != null && !texto.trim().isEmpty()) {
-            // 3. USA EL USUARIO LOGUEADO EN LUGAR DE UNO SIMULADO
+       String texto = txtNuevoComentario.getText().trim();
+        if (!texto.isEmpty()) {
             Comentario nuevoComentario = new Comentario(this.usuarioLogueado, texto);
             
-            publicacion.agregarComentario(nuevoComentario);
+            // Llama al método sobre el objeto, no sobre la clase
+            this.publicacionMostrada.agregarComentario(nuevoComentario);
+            
             txtNuevoComentario.setText("");
             actualizarVista();
         }
@@ -146,7 +157,7 @@ public class PublicacionVista extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lblNombreAutor;
     private javax.swing.JTextArea txtAreaComentarios;
-    private javax.swing.JTextArea txtAreaPublicacion;
+    private javax.swing.JTextArea txtAreaContenido;
     private javax.swing.JTextField txtNuevoComentario;
     // End of variables declaration//GEN-END:variables
 }
