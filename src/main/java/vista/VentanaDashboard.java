@@ -4,6 +4,7 @@
  */
 package vista;
 
+import controlador.ControladorPrincipal;
 import java.util.List;
 import javax.swing.JOptionPane;
 import modelo.Notificacion;
@@ -19,26 +20,16 @@ public class VentanaDashboard extends javax.swing.JFrame {
     private final Usuario usuarioLogueado;
 
     public VentanaDashboard(Usuario usuario) {
-        this.usuarioLogueado = usuario; 
-        
-        
-        
+        this.usuarioLogueado = usuario;
+
         initComponents();
-        
+
         personalizarComponentes();
         cargarNotificaciones(); // 
-        
-        
-        
-        
+
         pack(); // 
     }
 
-    
-    
-    
-    
-    
     private void cargarNotificaciones() {
         // Asumiendo que tienes una clase ServicioNotificaciones
         servicios.ServicioNotificaciones servicio = new servicios.ServicioNotificaciones();
@@ -149,6 +140,11 @@ public class VentanaDashboard extends javax.swing.JFrame {
         });
 
         btnVerPublicacion.setText("Ver Publicación de Ejemplo");
+        btnVerPublicacion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVerPublicacionActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -370,27 +366,26 @@ public class VentanaDashboard extends javax.swing.JFrame {
 
     private void menuNotificacionesMenuSelected(javax.swing.event.MenuEvent evt) {//GEN-FIRST:event_menuNotificacionesMenuSelected
         ServicioNotificaciones servicio = new ServicioNotificaciones();
-    try {
-        List<modelo.Notificacion> notificaciones = servicio.obtenerNotificacionesNoLeidas(this.usuarioLogueado);
-        
-        if (notificaciones.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "No tienes notificaciones nuevas.");
-        } else {
-            StringBuilder mensajeCompleto = new StringBuilder("Tus notificaciones:\n\n");
-            for (modelo.Notificacion n : notificaciones) {
-                mensajeCompleto.append("• ").append(n.getMensaje()).append("\n");
+        try {
+            List<modelo.Notificacion> notificaciones = servicio.obtenerNotificacionesNoLeidas(this.usuarioLogueado);
+
+            if (notificaciones.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "No tienes notificaciones nuevas.");
+            } else {
+                StringBuilder mensajeCompleto = new StringBuilder("Tus notificaciones:\n\n");
+                for (modelo.Notificacion n : notificaciones) {
+                    mensajeCompleto.append("• ").append(n.getMensaje()).append("\n");
+                }
+                JOptionPane.showMessageDialog(this, mensajeCompleto.toString());
+
+                servicio.marcarComoLeidas(notificaciones);
+                // 2. Vuelve a cargar las notificaciones para actualizar el contador del menú
+                cargarNotificaciones();
+                // --- FIN DE LA LÓGICA AÑADIDA ---
             }
-            JOptionPane.showMessageDialog(this, mensajeCompleto.toString());
-            
-           
-            servicio.marcarComoLeidas(notificaciones);
-            // 2. Vuelve a cargar las notificaciones para actualizar el contador del menú
-            cargarNotificaciones();
-            // --- FIN DE LA LÓGICA AÑADIDA ---
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al obtener notificaciones.");
         }
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Error al obtener notificaciones.");
-    }
     }//GEN-LAST:event_menuNotificacionesMenuSelected
 
     private void itemExplorarGruposActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemExplorarGruposActionPerformed
@@ -418,35 +413,42 @@ public class VentanaDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_itemVerPerfilActionPerformed
 
     private void menuUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuUsuarioActionPerformed
-      
+
     }//GEN-LAST:event_menuUsuarioActionPerformed
+
+    private void btnVerPublicacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerPublicacionActionPerformed
+        ControladorPrincipal controlador = new ControladorPrincipal();
+
+        // 2. Llama al método que hace todo el trabajo
+        controlador.mostrarVentanaPublicacion();
+    }//GEN-LAST:event_btnVerPublicacionActionPerformed
 
     /**
      * @param args the command line arguments
      */
     private void personalizarComponentes() {
-          this.setTitle("Dashboard - " + this.usuarioLogueado.getNombre()+ " " + this.usuarioLogueado.getsegundoApellido());
-    this.setLocationRelativeTo(null);
-    
-    if (this.usuarioLogueado != null) {
-        String nombre = this.usuarioLogueado.getNombre();
-        String apellido1 = this.usuarioLogueado.getApellido();
-        String apellido2 = this.usuarioLogueado.getsegundoApellido();
+        this.setTitle("Dashboard - " + this.usuarioLogueado.getNombre() + " " + this.usuarioLogueado.getsegundoApellido());
+        this.setLocationRelativeTo(null);
 
-        String nombreCompleto = nombre + " " + apellido1;
-        
-        // Añadir el segundo apellido solo si existe (no es nulo o vacío)
-        if (apellido2 != null && !apellido2.isEmpty()) {
-            nombreCompleto += " " + apellido2;
+        if (this.usuarioLogueado != null) {
+            String nombre = this.usuarioLogueado.getNombre();
+            String apellido1 = this.usuarioLogueado.getApellido();
+            String apellido2 = this.usuarioLogueado.getsegundoApellido();
+
+            String nombreCompleto = nombre + " " + apellido1;
+
+            // Añadir el segundo apellido solo si existe (no es nulo o vacío)
+            if (apellido2 != null && !apellido2.isEmpty()) {
+                nombreCompleto += " " + apellido2;
+            }
+
+            lblNombreCompleto.setText("BIENVENIDO, " + nombreCompleto.toUpperCase());
+
+            String infoCarrera = "Carrera: " + this.usuarioLogueado.getCarrera() + "  |  Ciclo: " + this.usuarioLogueado.getCiclo();
+            lblCarreraCiclo.setText(infoCarrera);
+
+            menuUsuario.setText(this.usuarioLogueado.getNombre());
         }
-
-        lblNombreCompleto.setText("BIENVENIDO, " + nombreCompleto.toUpperCase());
-        
-        String infoCarrera = "Carrera: " + this.usuarioLogueado.getCarrera() + "  |  Ciclo: " + this.usuarioLogueado.getCiclo();
-        lblCarreraCiclo.setText(infoCarrera);
-        
-        menuUsuario.setText(this.usuarioLogueado.getNombre());
-    }
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botonVerGrupos;
