@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 import modelo.Notificacion;
 import modelo.Usuario;
 import servicios.ServicioNotificaciones;
+import servicios.ServicioPublicaciones;
 
 /**
  *
@@ -17,17 +18,22 @@ import servicios.ServicioNotificaciones;
  */
 public class VentanaDashboard extends javax.swing.JFrame {
 
-    private final Usuario usuarioLogueado;
+    //private modelo.Usuario usuarioActual;
+    private modelo.Usuario usuarioLogueado;
 
+    
     public VentanaDashboard(Usuario usuario) {
-        this.usuarioLogueado = usuario;
+         //this.usuarioActual = usuario;
+         this.usuarioLogueado = usuario;
 
         initComponents();
 
         personalizarComponentes();
         cargarNotificaciones(); // 
+        cargarPublicaciones();
 
         pack(); // 
+
     }
 
     private void cargarNotificaciones() {
@@ -47,6 +53,68 @@ public class VentanaDashboard extends javax.swing.JFrame {
             // En caso de error, puedes indicarlo en el menú
             menuNotificaciones.setText("Notificaciones (Error)");
             e.printStackTrace();
+        }
+    }
+
+    private void cargarPublicaciones() {
+        // 1. Limpiamos el panel
+        panelPublicaciones.removeAll();
+
+        try {
+            ServicioPublicaciones servicio = new ServicioPublicaciones();
+            java.util.List<modelo.Publicacion> publicaciones = servicio.obtenerTodas();
+
+            // --- PUNTO DE VERIFICACIÓN CLAVE ---
+            // Imprimimos en la consola para saber cuántos elementos llegaron.
+            System.out.println("Número de publicaciones recuperadas: " + publicaciones.size());
+
+            if (publicaciones.isEmpty()) {
+                // Si no hay publicaciones, mostramos un mensaje amigable en el panel.
+                panelPublicaciones.add(new javax.swing.JLabel("No hay publicaciones para mostrar."));
+            } else {
+                for (modelo.Publicacion pub : publicaciones) {
+                    // Por cada publicación, creamos un pequeño panel para mostrarla
+                    javax.swing.JPanel panelPost = new javax.swing.JPanel();
+                    panelPost.setLayout(new javax.swing.BoxLayout(panelPost, javax.swing.BoxLayout.Y_AXIS));
+                    panelPost.setBorder(javax.swing.BorderFactory.createCompoundBorder(
+                            javax.swing.BorderFactory.createEtchedBorder(),
+                            javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5) // Añade un poco de margen interno
+                    ));
+
+                    // --- CÓDIGO A PRUEBA DE NULLPOINTEREXCEPTION ---
+                    String nombreAutor = "Autor desconocido"; // Valor por defecto
+                    if (pub.getUsuario() != null && pub.getUsuario().getNombre() != null) {
+                        nombreAutor = pub.getUsuario().getNombre();
+                    }
+
+                    javax.swing.JLabel lblAutor = new javax.swing.JLabel("Publicado por: " + nombreAutor);
+
+                    javax.swing.JTextArea txtContenido = new javax.swing.JTextArea(pub.getContenido());
+                    txtContenido.setEditable(false);
+                    txtContenido.setLineWrap(true);
+                    txtContenido.setWrapStyleWord(true);
+                    txtContenido.setOpaque(false); // Para que tome el color de fondo del panel
+
+                    // Añadimos los componentes al panel del post
+                    panelPost.add(lblAutor);
+                    panelPost.add(javax.swing.Box.createRigidArea(new java.awt.Dimension(0, 5))); // Pequeño espacio
+                    panelPost.add(new javax.swing.JScrollPane(txtContenido));
+
+                    // Añadimos el panel del post al panel principal de publicaciones
+                    panelPublicaciones.add(panelPost);
+                    panelPublicaciones.add(javax.swing.Box.createRigidArea(new java.awt.Dimension(0, 10))); // Espacio entre posts
+                }
+            }
+        } catch (Exception e) {
+            // Si ocurre cualquier otro error, lo imprimimos claramente.
+            System.err.println("Ocurrió un error inesperado al cargar las publicaciones:");
+            e.printStackTrace();
+        } finally {
+            // --- ACTUALIZACIÓN FINAL DE LA UI ---
+            // Esto se ejecuta siempre, haya o no haya errores/publicaciones.
+            // Es crucial para que los cambios (añadir o quitar todo) se reflejen.
+            panelPublicaciones.revalidate();
+            panelPublicaciones.repaint();
         }
     }
 
@@ -72,11 +140,14 @@ public class VentanaDashboard extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        botonVerGrupos = new javax.swing.JButton();
+        btnVerGrupos = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
         btnVerPublicacion = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        panelPublicaciones = new javax.swing.JPanel();
+        lblBienvenido = new javax.swing.JLabel();
         lblCarreraCiclo = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
@@ -121,10 +192,10 @@ public class VentanaDashboard extends javax.swing.JFrame {
 
         jLabel2.setText("Descripcion");
 
-        botonVerGrupos.setText("Ver mis grupos");
-        botonVerGrupos.addActionListener(new java.awt.event.ActionListener() {
+        btnVerGrupos.setText("Ver mis grupos");
+        btnVerGrupos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                botonVerGruposActionPerformed(evt);
+                btnVerGruposActionPerformed(evt);
             }
         });
 
@@ -146,6 +217,11 @@ public class VentanaDashboard extends javax.swing.JFrame {
             }
         });
 
+        panelPublicaciones.setLayout(new javax.swing.BoxLayout(panelPublicaciones, javax.swing.BoxLayout.Y_AXIS));
+        jScrollPane1.setViewportView(panelPublicaciones);
+
+        lblBienvenido.setText("Bienvenido");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -154,25 +230,32 @@ public class VentanaDashboard extends javax.swing.JFrame {
                 .addGap(25, 25, 25)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(btnVerPublicacion)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 313, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 516, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnVerPublicacion)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 460, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(botonVerGrupos, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnVerGrupos))
                         .addGap(48, 48, 48))))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(265, 265, 265)
+                .addComponent(lblBienvenido, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(39, 39, 39)
+                .addGap(17, 17, 17)
+                .addComponent(lblBienvenido)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jLabel3))
@@ -181,12 +264,17 @@ public class VentanaDashboard extends javax.swing.JFrame {
                     .addComponent(jLabel2)
                     .addComponent(jLabel4))
                 .addGap(18, 18, 18)
+                .addComponent(jButton2)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton2)
-                    .addComponent(botonVerGrupos))
-                .addGap(26, 26, 26)
-                .addComponent(btnVerPublicacion)
-                .addContainerGap(132, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(26, 26, 26)
+                        .addComponent(btnVerPublicacion))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(7, 7, 7)
+                        .addComponent(btnVerGrupos)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(15, Short.MAX_VALUE))
         );
 
         jMenu1.setText("Inicio");
@@ -308,7 +396,7 @@ public class VentanaDashboard extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(20, 20, 20)
-                        .addComponent(lblCarreraCiclo, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE))
+                        .addComponent(lblCarreraCiclo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(lblNombreCompleto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
@@ -336,11 +424,11 @@ public class VentanaDashboard extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void botonVerGruposActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonVerGruposActionPerformed
+    private void btnVerGruposActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerGruposActionPerformed
         // Este código abre la ventana que muestra los grupos del usuario.
         VentanaMisGrupos misGrupos = new VentanaMisGrupos(this.usuarioLogueado);
         misGrupos.setVisible(true);
-    }//GEN-LAST:event_botonVerGruposActionPerformed
+    }//GEN-LAST:event_btnVerGruposActionPerformed
 
     private void itemBuscarUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemBuscarUsuariosActionPerformed
 
@@ -417,10 +505,12 @@ public class VentanaDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_menuUsuarioActionPerformed
 
     private void btnVerPublicacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerPublicacionActionPerformed
+        if (usuarioLogueado != null) {
         ControladorPrincipal controlador = new ControladorPrincipal();
-
-        // 2. Llama al método que hace todo el trabajo
-        controlador.mostrarVentanaPublicacion();
+        controlador.mostrarVentanaPublicacionEjemplo(usuarioLogueado.getCorreo());
+    } else {
+        javax.swing.JOptionPane.showMessageDialog(this, "Error: No hay usuario logueado.");
+    }
     }//GEN-LAST:event_btnVerPublicacionActionPerformed
 
     /**
@@ -448,10 +538,10 @@ public class VentanaDashboard extends javax.swing.JFrame {
             lblCarreraCiclo.setText(infoCarrera);
 
             menuUsuario.setText(this.usuarioLogueado.getNombre());
-        }
+        
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton botonVerGrupos;
+    private javax.swing.JButton btnVerGrupos;
     private javax.swing.JButton btnVerPublicacion;
     private javax.swing.JMenuItem itemBuscarUsuarios;
     private javax.swing.JMenuItem itemCerrarSesion;
@@ -479,10 +569,13 @@ public class VentanaDashboard extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblBienvenido;
     private javax.swing.JLabel lblCarreraCiclo;
     private javax.swing.JLabel lblNombreCompleto;
     private javax.swing.JMenu menuNotificaciones;
     private javax.swing.JMenu menuRecursos;
     private javax.swing.JMenu menuUsuario;
+    private javax.swing.JPanel panelPublicaciones;
     // End of variables declaration//GEN-END:variables
 }

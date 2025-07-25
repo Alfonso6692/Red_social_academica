@@ -7,6 +7,8 @@ package vista;
 import modelo.Comentario;
 import modelo.Publicacion;
 import modelo.Usuario;
+import persistencia.PublicacionDAO;
+import persistencia.UsuarioDAO;
 
 /**
  *
@@ -14,19 +16,20 @@ import modelo.Usuario;
  */
 public final class PublicacionVista extends javax.swing.JFrame {
 
-   
+    private modelo.Publicacion publicacion;
     private final Publicacion publicacionMostrada;
     private final Usuario usuarioLogueado;
+
     /**
      * Creates new form PublicacionVista
      *
      * @param publicacion
      * @param usuario
      */
-
     public PublicacionVista(modelo.Publicacion publicacion, modelo.Usuario usuario) {
         this.usuarioLogueado = usuario;
-        this.publicacionMostrada=publicacion;
+        this.publicacion = publicacion;
+        this.publicacionMostrada = publicacion;
         initComponents();
         actualizarVista();
 
@@ -35,23 +38,53 @@ public final class PublicacionVista extends javax.swing.JFrame {
         // ej: textAreaContenido.setText(publicacion.getContenido());
     }
 
-    public void actualizarVista() {
-
-        lblNombreAutor.setText("Publicación de: " + this.publicacionMostrada.getUsuario().getNombre());
-
-        txtAreaContenido.setText(publicacionMostrada.getContenido());
+    private void actualizarVista() {
+        // Esta parte está bien
+        lblNombreAutor.setText("Publicación de: " + publicacion.getUsuario().getNombre());
+        txtAreaContenido.setText(publicacion.getContenido());
 
         StringBuilder textoComentarios = new StringBuilder();
-        if (publicacionMostrada.getComentarios() != null) {
-            for (Comentario c : publicacionMostrada.getComentarios()) {
-            // Asumiendo que la clase Comentario tiene getAutor() y getTexto()
-            textoComentarios.append(c.getAutor().getNombre()) // Usa 'c' minúscula
-                            .append(": ")
-                            .append(c.getTexto()) // Usa 'c' minúscula
-                            .append("\n");
-        }
+        if (publicacion.getComentarios() != null) {
+
+            // --- CORRECCIÓN AQUÍ ---
+            // Se recorre cada comentario individual usando la variable 'c'
+            for (Comentario c : publicacion.getComentarios()) {
+                // Asumiendo que la clase Comentario tiene getAutor() y getTexto()
+                textoComentarios.append(c.getAutor().getNombre()) // Usa 'c' minúscula
+                        .append(": ")
+                        .append(c.getTexto()) // Usa 'c' minúscula
+                        .append("\n");
+            }
         }
         txtAreaComentarios.setText(textoComentarios.toString());
+
+    }
+
+    public void mostrarVentanaPublicacion(String emailUsuario) {
+        // 1. Crear instancias de los DAO
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
+        PublicacionDAO publicacionDAO = new PublicacionDAO();
+
+        try {
+            // 2. Usar el email que se pasa como parámetro
+            Usuario usuarioLogueado = usuarioDAO.buscarPorCorreo(emailUsuario);
+
+            // CORRECCIÓN: Se usa obtenerPublicacionSimple
+            Publicacion publicacionAMostrar = publicacionDAO.obtenerPublicacionSimple();
+
+            // 3. Verificación para evitar errores si algo no se encuentra
+            if (usuarioLogueado == null || publicacionAMostrar == null) {
+                System.err.println("Error: No se pudieron cargar los datos de ejemplo desde el DAO.");
+                return;
+            }
+
+            // 4. Crear y mostrar la Vista
+            PublicacionVista vistaPublicacion = new PublicacionVista(publicacionAMostrar, usuarioLogueado);
+            vistaPublicacion.setVisible(true);
+
+        } catch (java.sql.SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -137,13 +170,13 @@ public final class PublicacionVista extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnComentarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComentarActionPerformed
-       String texto = txtNuevoComentario.getText().trim();
+        String texto = txtNuevoComentario.getText().trim();
         if (!texto.isEmpty()) {
             Comentario nuevoComentario = new Comentario(this.usuarioLogueado, texto);
-            
+
             // Llama al método sobre el objeto, no sobre la clase
             this.publicacionMostrada.agregarComentario(nuevoComentario);
-            
+
             txtNuevoComentario.setText("");
             actualizarVista();
         }

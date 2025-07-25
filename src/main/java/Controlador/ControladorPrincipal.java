@@ -8,33 +8,63 @@ import vista.PublicacionVista;
 
 public class ControladorPrincipal {
 
-    public void mostrarVentanaPublicacion() {
+    /**
+     * Muestra una publicación específica por ID
+     */
+    public void mostrarVentanaPublicacion(String emailUsuario, String idPublicacion) {
         // 1. Crear instancias de los DAO
         UsuarioDAO usuarioDAO = new UsuarioDAO();
-        PublicacionDAO publicacionDAO = new PublicacionDAO();
+        PublicacionDAO pubDAO = new PublicacionDAO();
 
         try {
-            // 2. Usar los DAO para obtener los datos
-            // CORRECCIÓN: Se usa buscarPorCorreo con un correo de ejemplo
-            Usuario usuarioLogueado = usuarioDAO.buscarPorCorreo("carlos.garcia@gmail.com"); 
-            
-            // CORRECCIÓN: Se usa obtenerPublicacionSimple
-            Publicacion publicacionAMostrar = publicacionDAO.obtenerPublicacionSimple();
+            // 2. Obtener usuario logueado por email
+            Usuario usuarioLogueado = usuarioDAO.buscarPorCorreo(emailUsuario);
 
-            // 3. Verificación para evitar errores si algo no se encuentra
-            if (usuarioLogueado == null || publicacionAMostrar == null) {
-                System.err.println("Error: No se pudieron cargar los datos de ejemplo desde el DAO.");
-                // En una app real, mostrarías un JOptionPane con un error.
+            // 3. Obtener publicación específica por ID
+            Publicacion publicacionAMostrar = pubDAO.obtenerPorId(idPublicacion);
+
+            // 4. Verificación para evitar errores
+            if (usuarioLogueado == null) {
+                System.err.println("Error: Usuario no encontrado con email: " + emailUsuario);
                 return;
             }
 
-            // 4. Crear y mostrar la Vista, pasándole los datos "reales" obtenidos del DAO
+            if (publicacionAMostrar == null) {
+                System.err.println("Error: Publicación no encontrada con ID: " + idPublicacion);
+                return;
+            }
+
+            // 5. Crear y mostrar la Vista con los datos correctos
             PublicacionVista vistaPublicacion = new PublicacionVista(publicacionAMostrar, usuarioLogueado);
             vistaPublicacion.setVisible(true);
 
         } catch (java.sql.SQLException e) {
             e.printStackTrace();
-            // Manejar el error de la base de datos
+            System.err.println("Error de base de datos: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Método de ejemplo - muestra la primera publicación disponible
+     */
+    public void mostrarVentanaPublicacionEjemplo(String emailUsuario) {
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
+        PublicacionDAO pubDAO = new PublicacionDAO();
+
+        try {
+            Usuario usuarioLogueado = usuarioDAO.buscarPorCorreo(emailUsuario);
+            Publicacion publicacionAMostrar = pubDAO.obtenerPublicacionSimple();
+
+            if (usuarioLogueado == null || publicacionAMostrar == null) {
+                System.err.println("Error: No se pudieron cargar los datos de ejemplo desde el DAO.");
+                return;
+            }
+
+            PublicacionVista vistaPublicacion = new PublicacionVista(publicacionAMostrar, usuarioLogueado);
+            vistaPublicacion.setVisible(true);
+
+        } catch (java.sql.SQLException e) {
+            e.printStackTrace();
         }
     }
 }
