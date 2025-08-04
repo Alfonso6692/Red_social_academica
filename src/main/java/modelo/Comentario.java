@@ -27,16 +27,21 @@ public class Comentario {
      * Crea una nueva instancia de un Comentario.
      * @param autor El usuario que realiza el comentario.
      * @param texto El contenido del comentario.
+     * @param idPublicacion
      */
-    public Comentario(Usuario autor, String texto) {
+    public Comentario(Usuario autor, String texto, String idPublicacion ) {
         this.autor = autor;
         this.texto = texto;
+         this.idPublicacion = idPublicacion;
         this.fechaCreacion = LocalDateTime.now();
     }
 
     // --- GETTERS Y SETTERS ---
     // Se necesitan setters para que el DAO pueda asignar los valores desde la BD
 
+    
+    
+    
     public String getId() {
         return id;
     }

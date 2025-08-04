@@ -118,4 +118,114 @@ public class PublicacionDAO {
         return publicacion;
     }
 
+    /**
+     * Actualiza una publicación existente en la base de datos
+     *
+     * @param publicacion La publicación con los datos actualizados
+     * @throws SQLException Si ocurre un error en la base de datos
+     */
+    public void actualizar(Publicacion publicacion) throws SQLException {
+        String sql = "UPDATE publicaciones SET contenido = ?, fecha_publicacion = ? WHERE id = ?";
+
+        try (Connection conn = ConexionBD.getConexion(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, publicacion.getContenido());
+            pstmt.setTimestamp(2, Timestamp.valueOf(publicacion.getFechaPublicacion()));
+            pstmt.setString(3, publicacion.getId());
+
+            int filasAfectadas = pstmt.executeUpdate();
+
+            if (filasAfectadas == 0) {
+                throw new SQLException("No se pudo actualizar la publicación con ID: " + publicacion.getId());
+            }
+        }
+    }
+
+    /**
+     * Elimina una publicación de la base de datos
+     */
+    public void eliminar(String idPublicacion) throws SQLException {
+        System.out.println("DEBUG: Intentando eliminar publicación con ID: " + idPublicacion);
+
+        // Primero eliminar comentarios relacionados
+        String sqlComentarios = "DELETE FROM comentarios WHERE id_publicacion = ?";
+
+        // Luego eliminar la publicación
+        String sqlPublicacion = "DELETE FROM publicaciones WHERE id = ?";
+
+        try (Connection conn = ConexionBD.getConexion()) {
+            // Iniciar transacción
+            conn.setAutoCommit(false);
+
+            try {
+                // Eliminar comentarios primero
+                try (PreparedStatement pstmtComentarios = conn.prepareStatement(sqlComentarios)) {
+                    pstmtComentarios.setString(1, idPublicacion);
+                    int comentariosEliminados = pstmtComentarios.executeUpdate();
+                    System.out.println("DEBUG: Comentarios eliminados: " + comentariosEliminados);
+                }
+
+                // Eliminar publicación
+                try (PreparedStatement pstmtPublicacion = conn.prepareStatement(sqlPublicacion)) {
+                    pstmtPublicacion.setString(1, idPublicacion);
+                    int filasAfectadas = pstmtPublicacion.executeUpdate();
+                    System.out.println("DEBUG: Publicaciones eliminadas: " + filasAfectadas);
+
+                    if (filasAfectadas == 0) {
+                        throw new SQLException("No se encontró la publicación con ID: " + idPublicacion);
+                    }
+                }
+
+                // Confirmar transacción
+                conn.commit();
+                System.out.println("DEBUG: Eliminación exitosa");
+
+            } catch (SQLException e) {
+                // Rollback en caso de error
+                conn.rollback();
+                System.err.println("DEBUG: Error en eliminación, rollback realizado");
+                throw e;
+            } finally {
+                // Restaurar autocommit
+                conn.setAutoCommit(true);
+            }
+        }
+    }
+
+    /**
+     * Busca una publicación por su ID
+     *
+     * @param idPublicacion ID de la publicación
+     * @return La publicación encontrada o null si no existe
+     * @throws SQLException Si ocurre un error en la base de datos
+     */
+    public Publicacion buscarPorId(String idPublicacion) throws SQLException {
+        String sql = "SELECT p.*, u.nombre, u.apellido FROM publicaciones p "
+                + "JOIN usuarios u ON p.id_usuario = u.id "
+                + "WHERE p.id = ?";
+
+        try (Connection conn = ConexionBD.getConexion(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, idPublicacion);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                Publicacion publicacion = new Publicacion();
+                publicacion.setId(rs.getString("id"));
+                publicacion.setContenido(rs.getString("contenido"));
+                publicacion.setFechaPublicacion(rs.getTimestamp("fecha_publicacion").toLocalDateTime());
+
+                Usuario autor = new Usuario();
+                autor.setId(rs.getString("id_usuario"));
+                autor.setNombre(rs.getString("nombre"));
+                autor.setApellido(rs.getString("apellido"));
+
+                publicacion.setUsuario(autor);
+
+                return publicacion;
+            }
+        }
+        return null;
+    }
+
 }
