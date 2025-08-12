@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.UUID;
+import modelo.Comentario;
 import modelo.Publicacion;
 import modelo.Usuario;
 
@@ -70,6 +72,7 @@ public class PublicacionDAO {
 
     // Método para guardar una nueva publicación (lo necesitarás más adelante)
     public void guardar(Publicacion publicacion) throws SQLException {
+        System.out.println("DEBUG: PublicacionDAO.guardar llamado");
         String sql = "INSERT INTO publicaciones (id, contenido, fecha_publicacion, id_usuario) VALUES (?, ?, ?, ?)";
         try (Connection conn = ConexionBD.getConexion(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
@@ -227,5 +230,77 @@ public class PublicacionDAO {
         }
         return null;
     }
+    
+    public boolean agregarComentario(String textoComentario, String idPublicacion, String idUsuario) {
+    // La consulta SQL que vas a ejecutar. Asegúrate que incluya la columna id.
+    String sql = "INSERT INTO comentarios (id, contenido, fecha_creacion, id_publicacion, id_usuario) VALUES (?, ?, ?, ?, ?)";
+
+    try {
+        // Obten tu conexión a la BD
+        Connection conn = ConexionBD.getConexion(); 
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+
+        // --- LÍNEA CLAVE: Generar un nuevo ID único para el comentario ---
+        String nuevoIdComentario = UUID.randomUUID().toString();
+
+        // Asignar los valores a la consulta
+        pstmt.setString(1, nuevoIdComentario); // El ID que acabas de generar
+        pstmt.setString(2, textoComentario);    // El texto del comentario ("Excelente")
+        pstmt.setTimestamp(3, new Timestamp(System.currentTimeMillis())); // La fecha y hora actual
+        pstmt.setString(4, idPublicacion);  // El ID de la publicación a la que pertenece el comentario
+        pstmt.setString(5, idUsuario);      // El ID del usuario que está comentando (ej. "ALFONSO VASQUEZ LUDEÑA")
+
+        // Ejecutar la inserción
+        int filasAfectadas = pstmt.executeUpdate();
+        
+        // Cerrar recursos
+        pstmt.close();
+        conn.close();
+        
+        return filasAfectadas > 0;
+
+    } catch (SQLException e) {
+        System.err.println("Error al agregar comentario: " + e.getMessage());
+        // Aquí puedes mostrar el JOptionPane de error que ya tienes
+        return false;
+    }
+}
+    
+    
+    public void guardar(Comentario comentario) throws SQLException {
+    System.out.println("DEBUG: Guardando comentario con ID: " + comentario.getId());
+    
+    String sql = "INSERT INTO comentarios (id, texto, fecha_comentario, id_publicacion, id_autor) VALUES (?, ?, ?, ?, ?)";
+    
+    try (Connection conn = ConexionBD.getConexion(); 
+         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        
+        // Verificar que el ID no sea null
+        if (comentario.getId() == null) {
+            comentario.setId(java.util.UUID.randomUUID().toString());
+            System.out.println("DEBUG: ID era null, generado nuevo: " + comentario.getId());
+        }
+        
+        pstmt.setString(1, comentario.getId());
+        pstmt.setString(2, comentario.getContenido());
+        pstmt.setTimestamp(3, java.sql.Timestamp.valueOf(comentario.getFechaComentario()));
+        pstmt.setString(4, comentario.getIdPublicacion());
+        pstmt.setString(5, comentario.getAutor().getId());
+        
+        System.out.println("DEBUG: Ejecutando INSERT con:");
+        System.out.println("  ID: " + comentario.getId());
+        System.out.println("  Texto: " + comentario.getContenido());
+        System.out.println("  ID Publicación: " + comentario.getIdPublicacion());
+        System.out.println("  ID Autor: " + comentario.getAutor().getId());
+        
+        int filasAfectadas = pstmt.executeUpdate();
+        System.out.println("DEBUG: Comentario guardado, filas afectadas: " + filasAfectadas);
+        
+        if (filasAfectadas == 0) {
+            throw new SQLException("No se pudo insertar el comentario");
+        }
+    }
+}
+
 
 }

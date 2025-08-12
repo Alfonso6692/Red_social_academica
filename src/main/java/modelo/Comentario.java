@@ -10,10 +10,11 @@ public class Comentario {
     // --- ATRIBUTOS ---
     // Se necesita un ID para la base de datos y saber a qué publicación pertenece
     private String id;
-    private String texto;
+    private String contenido;
     private LocalDateTime fechaCreacion;
     private Usuario autor;
     private String idPublicacion; // Para la clave foránea en la BD
+    //private java.time.LocalDateTime fechaComentario;
 
     /**
      * Constructor por defecto (vacío).
@@ -26,12 +27,12 @@ public class Comentario {
     /**
      * Crea una nueva instancia de un Comentario.
      * @param autor El usuario que realiza el comentario.
-     * @param texto El contenido del comentario.
+     * @param contenido El contenido del comentario.
      * @param idPublicacion
      */
-    public Comentario(Usuario autor, String texto, String idPublicacion ) {
+    public Comentario(Usuario autor, String contenido, String idPublicacion ) {
         this.autor = autor;
-        this.texto = texto;
+        this.contenido= contenido;
          this.idPublicacion = idPublicacion;
         this.fechaCreacion = LocalDateTime.now();
     }
@@ -50,12 +51,12 @@ public class Comentario {
         this.id = id;
     }
 
-    public String getTexto() {
-        return texto;
+    public String getContenido() {
+        return contenido;
     }
 
-    public void setTexto(String texto) {
-        this.texto = texto;
+    public void setContenido(String contenido) {
+        this.contenido = contenido;
     }
 
     public LocalDateTime getFechaCreacion() {
@@ -82,9 +83,28 @@ public class Comentario {
         this.idPublicacion = idPublicacion;
     }
 
+   // ✅ ALIAS para compatibilidad con el código existente
+    public LocalDateTime getFechaComentario() {
+        return fechaCreacion; // Devolver fechaCreacion
+    }
+
+     public void setFechaComentario(LocalDateTime fechaComentario) {
+        this.fechaCreacion = fechaComentario; // Asignar a fechaCreacion
+    }
+    
+     public String getTexto() {
+        return contenido;
+    }
+    
+    public void setTexto(String texto) {
+        this.contenido = texto;
+    }
+    
     @Override
     public String toString() {
-        // CORREGIDO: Se usa getNombre() que sí existe en la clase Usuario
-        return autor.getNombre() + ": " + texto;
+        return autor.getNombre() + ": " + getContenido();
     }
+    
+
+    
 }

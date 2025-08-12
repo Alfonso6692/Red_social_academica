@@ -31,7 +31,7 @@ public final class PublicacionVista extends javax.swing.JFrame {
      * @param publicacion
      * @param usuario
      * @param dashboard
-     * 
+     *
      */
     public PublicacionVista(modelo.Publicacion publicacion, modelo.Usuario usuario, vista.VentanaDashboard dashboard) {
         System.out.println("DEBUG: Constructor PublicacionVista con dashboard llamado");
@@ -39,12 +39,14 @@ public final class PublicacionVista extends javax.swing.JFrame {
         this.usuarioLogueado = usuario;
         this.publicacion = publicacion;
         this.publicacionMostrada = publicacion;
-        this.dashboardPadre = null;
+        //this.dashboardPadre = null;
         this.dashboardPadre = dashboard;
 
         System.out.println("DEBUG: dashboardPadre asignado = " + this.dashboardPadre);
 
         initComponents();
+        cargarComentarios();
+
         actualizarVista();
         configurarPermisos();
         boolean esMiPublicacion = publicacion.getUsuario().getId().equals(usuarioLogueado.getId());
@@ -89,32 +91,38 @@ public final class PublicacionVista extends javax.swing.JFrame {
     }
 
     private void actualizarVista() {
-        // Esta parte está bien
         lblNombreAutor.setText("Publicación de: " + publicacion.getUsuario().getNombre());
         txtAreaContenido.setText(publicacion.getContenido());
-
+        // Construir el texto de todos los comentarios
         StringBuilder textoComentarios = new StringBuilder();
-        if (publicacion.getComentarios() != null) {
 
-            // --- CORRECCIÓN AQUÍ ---
-            // Se recorre cada comentario individual usando la variable 'c'
-            for (Comentario c : publicacion.getComentarios()) {
-                // Asumiendo que la clase Comentario tiene getAutor() y getTexto()
-                textoComentarios.append(c.getAutor().getNombre()) // Usa 'c' minúscula
+        if (publicacionMostrada.getComentarios() != null && publicacionMostrada.getComentarios().tamaño() > 0) {
+            System.out.println("DEBUG: Mostrando " + publicacionMostrada.getComentarios().tamaño() + " comentarios");
+
+            System.out.println("DEBUG: Mostrando "
+                    + publicacionMostrada.getComentarios().tamaño() + " comentarios");
+            // Iterar o recorrer usando ArrayListPersonalizado
+            for (int i = 0; i < publicacionMostrada.getComentarios().tamaño(); i++) {
+                Comentario c = publicacionMostrada.getComentarios().obtener(i);
+                textoComentarios.append(c.getAutor().getNombre())
                         .append(": ")
-                        .append(c.getTexto()) // Usa 'c' minúscula
+                        .append(c.getContenido())
                         .append("\n");
             }
+        } else {
+            textoComentarios.append("No hay comentarios aún.");
+            System.out.println("DEBUG: No hay comentarios para mostrar");
         }
-        txtAreaComentarios.setText(textoComentarios.toString());
 
+        txtAreaComentarios.setText(textoComentarios.toString());
+        // Hacer scroll al final para ver el nuevo comentario
+        txtAreaComentarios.setCaretPosition(txtAreaComentarios.getDocument().getLength());
     }
 
     public void mostrarVentanaPublicacion(String emailUsuario, String idPublicacion, vista.VentanaDashboard dashboard) {
         System.out.println("DEBUG: mostrarVentanaPublicacion CON dashboard llamado");
         System.out.println("DEBUG: Dashboard recibido = " + dashboard);
-        
-        
+
         // 1. Crear instancias de los DAO
         UsuarioDAO usuarioDAO = new UsuarioDAO();
         PublicacionDAO publicacionDAO = new PublicacionDAO();
@@ -128,20 +136,19 @@ public final class PublicacionVista extends javax.swing.JFrame {
 
             // 3. Verificación para evitar errores si algo no se encuentra
             if (usuarioLogueado == null) {
-                 System.err.println("Error: Usuario no encontrado con email: " + emailUsuario);
+                System.err.println("Error: Usuario no encontrado con email: " + emailUsuario);
                 return;
             }
-            
+
             if (publicacionAMostrar == null) {
-                System.out.println("Error: Publicacion no encontrada con ID: " +idPublicacion);
+                System.out.println("Error: Publicacion no encontrada con ID: " + idPublicacion);
                 return;
             }
 
             // 4. Crear y mostrar la Vista
-            
             vista.PublicacionVista vistaPublicacion = new vista.PublicacionVista(publicacionAMostrar, usuarioLogueado, dashboard);
             vistaPublicacion.setVisible(true);
-            
+
             System.out.println("DEBUG: PublicacionVista creada CON dashboard");
 
         } catch (java.sql.SQLException e) {
@@ -149,31 +156,53 @@ public final class PublicacionVista extends javax.swing.JFrame {
             System.err.println("Error de base de datos: " + e.getMessage());
         }
     }
-    
+
     public void mostrarVentanaPublicacionEjemplo(String emailUsuario) {
-    UsuarioDAO usuarioDAO = new UsuarioDAO();
-    PublicacionDAO publicacionDAO = new PublicacionDAO();
-    
-    try {
-        Usuario usuarioLogueado = usuarioDAO.buscarPorCorreo(emailUsuario);
-        Publicacion publicacionAMostrar = publicacionDAO.obtenerPublicacionSimple();
-        
-        if (usuarioLogueado == null || publicacionAMostrar == null) {
-            System.err.println("Error: No se pudieron cargar los datos de ejemplo desde el DAO.");
-            return;
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
+        PublicacionDAO publicacionDAO = new PublicacionDAO();
+
+        try {
+            Usuario usuarioLogueado = usuarioDAO.buscarPorCorreo(emailUsuario);
+            Publicacion publicacionAMostrar = publicacionDAO.obtenerPublicacionSimple();
+
+            if (usuarioLogueado == null || publicacionAMostrar == null) {
+                System.err.println("Error: No se pudieron cargar los datos de ejemplo desde el DAO.");
+                return;
+            }
+
+            // Usar constructor sin dashboard para el ejemplo
+            vista.PublicacionVista vistaPublicacion = new vista.PublicacionVista(publicacionAMostrar, usuarioLogueado);
+            vistaPublicacion.setVisible(true);
+
+        } catch (java.sql.SQLException e) {
+            e.printStackTrace();
         }
-        
-        // Usar constructor sin dashboard para el ejemplo
-        vista.PublicacionVista vistaPublicacion = new vista.PublicacionVista(publicacionAMostrar, usuarioLogueado);
-        vistaPublicacion.setVisible(true);
-        
-    } catch (java.sql.SQLException e) {
-        e.printStackTrace();
     }
-}
-    
-    
-    
+
+    public void cargarComentarios() {
+        try {
+            persistencia.ComentarioDAO comentarioDAO = new persistencia.ComentarioDAO();
+
+            // Obtener comentarios como ArrayListPersonalizado
+            estructuras.ArrayListPersonalizado<Comentario> comentarios
+                    = comentarioDAO.obtenerPorPublicacionPersonalizado(publicacion.getId());
+
+            // Asignar los comentarios a la publicación
+            publicacionMostrada.setComentarios(comentarios);
+
+            System.out.println("DEBUG: Comentarios cargados: " + comentarios.tamaño());
+            for (int i = 0; i < comentarios.tamaño(); i++) {
+                Comentario c = comentarios.obtener(i);
+                System.out.println("  - " + c.getAutor().getNombre() + ": " + c.getContenido());
+            }
+
+        } catch (Exception e) {
+            System.err.println("ERROR al cargar comentarios: " + e.getMessage());
+            e.printStackTrace();
+            // Inicializar con lista vacía si hay error
+            publicacionMostrada.setComentarios(new estructuras.ArrayListPersonalizado<>());
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -194,6 +223,7 @@ public final class PublicacionVista extends javax.swing.JFrame {
         btnComentar = new javax.swing.JButton();
         botonModificar = new javax.swing.JButton();
         botonEliminar = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -228,6 +258,13 @@ public final class PublicacionVista extends javax.swing.JFrame {
             }
         });
 
+        jButton1.setText("Salir");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -249,7 +286,8 @@ public final class PublicacionVista extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(botonModificar)
-                            .addComponent(botonEliminar))
+                            .addComponent(botonEliminar)
+                            .addComponent(jButton1))
                         .addGap(0, 0, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
@@ -263,14 +301,17 @@ public final class PublicacionVista extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(55, 55, 55)
-                                .addComponent(lblNombreAutor, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(67, 67, 67)
-                                .addComponent(botonModificar)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lblNombreAutor, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(botonModificar)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
                         .addComponent(botonEliminar)))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(btnComentar)
@@ -285,39 +326,59 @@ public final class PublicacionVista extends javax.swing.JFrame {
 
     private void btnComentarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComentarActionPerformed
         String texto = txtNuevoComentario.getText().trim();
-        if (!texto.isEmpty()) {
-            // A:
+
+        if (texto.isEmpty()) {
             javax.swing.JOptionPane.showMessageDialog(this, "Por favor escribe un comentario.");
             return;
         }
 
-        // Llama al método sobre el objeto, no sobre la clase
-        // A:
         try {
+            System.out.println("DEBUG: Creando comentario con texto: " + texto);
 
+            // ✅ CREAR comentario con todos los datos necesarios
             Comentario nuevoComentario = new Comentario();
+            nuevoComentario.setId(java.util.UUID.randomUUID().toString());
             nuevoComentario.setAutor(this.usuarioLogueado);
-            nuevoComentario.setTexto(texto);
+            nuevoComentario.setContenido(texto);
             nuevoComentario.setIdPublicacion(this.publicacionMostrada.getId());
+            // Establecer la fecha ANTES de guardar
+            nuevoComentario.setFechaComentario(java.time.LocalDateTime.now());
+
+            System.out.println("DEBUG: Comentario creado:");
+            System.out.println("  ID: " + nuevoComentario.getId());
+            System.out.println("  Texto: " + nuevoComentario.getContenido());
+            System.out.println("  Fecha: " + nuevoComentario.getFechaComentario());
+            System.out.println("  Autor ID: " + nuevoComentario.getAutor().getId());
+
             persistencia.ComentarioDAO comentarioDAO = new persistencia.ComentarioDAO();
             comentarioDAO.guardar(nuevoComentario);
 
-            // Actualizar la vista para mostrar el nuevo comentario
+            if (publicacionMostrada.getComentarios() == null) {
+                publicacionMostrada.setComentarios(new estructuras.ArrayListPersonalizado<>());
+            }
+            publicacionMostrada.getComentarios().agregar(nuevoComentario);
+            // Actualizar vista
             actualizarVista();
+            //RECARGAR TODOS LOS COMENTARIOS DESDE LA BD
 
-            // Limpiar el campo de texto
+            cargarComentarios();
+
+            // Limpiar campo
             txtNuevoComentario.setText("");
 
+            // ✅ OPCIONAL: Refrescar también el dashboard si existe
+            if (this.dashboardPadre != null) {
+                javax.swing.SwingUtilities.invokeLater(() -> {
+                    dashboardPadre.cargarPublicaciones();
+                });
+            }
             javax.swing.JOptionPane.showMessageDialog(this, "Comentario agregado exitosamente.");
 
         } catch (Exception ex) {
-            System.err.println("Error general: " + ex.getMessage());
+            System.err.println("ERROR al agregar comentario: " + ex.getMessage());
             ex.printStackTrace();
-            javax.swing.JOptionPane.showMessageDialog(this, "Error inesperado: " + ex.getMessage());
+            javax.swing.JOptionPane.showMessageDialog(this, "Error al agregar comentario: " + ex.getMessage());
         }
-
-        txtNuevoComentario.setText("");
-        actualizarVista();
 
     }//GEN-LAST:event_btnComentarActionPerformed
 
@@ -338,30 +399,45 @@ public final class PublicacionVista extends javax.swing.JFrame {
 
                 // Actualiza la vista para mostrar el cambio inmediatamente
                 actualizarVista();
+                if (this.dashboardPadre != null) {
+                    javax.swing.SwingUtilities.invokeLater(() -> {
+                        System.out.println("DEBUG: Refrescando dashboard");
+                        dashboardPadre.cargarPublicaciones();
+                        dashboardPadre.revalidate();
+                        dashboardPadre.repaint();
+                    });
+                }
 
-                javax.swing.JOptionPane.showMessageDialog(this, "Publicación actualizada con éxito.");
-
-            } catch (java.sql.SQLException e) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Error al modificar la publicación: " + e.getMessage());
-            }
-
-// En el método botonEliminarActionPerformed (línea 266):
-            try {
-                // Llama al servicio para eliminar la publicación de la base de datos
-                servicios.ServicioPublicaciones servicio = new servicios.ServicioPublicaciones();
-                servicio.eliminarPublicacion(this.publicacionMostrada);
-
-                javax.swing.JOptionPane.showMessageDialog(this, "Publicación eliminada con éxito.");
-
-                // Cierra la ventana de la publicación después de eliminarla
-                this.dispose();
+                javax.swing.JOptionPane.showMessageDialog(
+                        this,
+                        "Publicación actualizada con éxito."
+                );
 
             } catch (java.sql.SQLException e) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Error al eliminar la publicación: " + e.getMessage());
+                javax.swing.JOptionPane.showMessageDialog(
+                        this,
+                        "Error: " + e.getMessage()
+                );
             }
+
+            /**
+             * // En el método botonEliminarActionPerformed (línea 266): try {
+             * // Llama al servicio para eliminar la publicación de la base de
+             * datos servicios.ServicioPublicaciones servicio = new
+             * servicios.ServicioPublicaciones();
+             * servicio.eliminarPublicacion(this.publicacionMostrada);
+             *
+             * javax.swing.JOptionPane.showMessageDialog(this, "Publicación
+             * eliminada con éxito.");
+             *
+             * // Cierra la ventana de la publicación después de eliminarla
+             * this.dispose();
+             *
+             * } catch (java.sql.SQLException e) {
+             * javax.swing.JOptionPane.showMessageDialog(this, "Error al
+             * eliminar la publicación: " + e.getMessage()); }*
+             */
         }
-
-
     }//GEN-LAST:event_botonModificarActionPerformed
 
     private void botonEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonEliminarActionPerformed
@@ -428,11 +504,16 @@ public final class PublicacionVista extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_botonEliminarActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botonEliminar;
     private javax.swing.JButton botonModificar;
     private javax.swing.JButton btnComentar;
+    private javax.swing.JButton jButton1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
